@@ -21,9 +21,6 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 var a_token = ''
 var r_token = ''
 
-console.log(client_id)
-console.log(client_secret)
-
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
