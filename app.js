@@ -13,10 +13,9 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var musetools = require('./muse-tools')
-var config = require('./config')
 
-var client_id = config.client_id; // Your client id
-var client_secret = config.client_secret; // Your secret
+var client_id = process.env.CLIENT_ID // Your client id
+var client_secret = process.env.CLIENT_SECRET; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var a_token = ''
