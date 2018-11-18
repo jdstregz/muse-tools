@@ -1,0 +1,512 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Muse Tools</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <style type="text/css">
+      #login, #loggedin {
+        display: none;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="search">
+        <h1>Muse Tools - Search</h1>
+      </div>
+      <div id="loggedin">
+        <div id="search-panel">
+          <div class="input-group">
+            <input id="search-input" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+            <div class="input-group-append">
+              <button id="search-button" class="btn btn-success" type="button">Search</button>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col" id="search-results"></div>
+            <div class="col">
+              <div class="card mt-1" id="details-card">
+                <div class="card-body">
+                  <h2 class="card-title" id="detailsName">Details Panel</h2>
+                  <h6 class="card-subtitle mb-1" id="artistsName">Select a track</h6>
+                  <table class="table">
+                    <tbody>
+                      <tbody id="details-panel-track">
+                        <script id="details-filler-track" type="text/x-handlebars-template">
+                          <tr>
+                            <th scope="row">Name</th>
+                            <td>{{name}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Artist</th>
+                            <td>{{artists.0.name}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Album</th>
+                            <td>{{album.name}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Release Date</th>
+                            <td>{{album.release_date}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Track #</th>
+                            <td>{{track_number}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Id</th>
+                            <td>{{id}}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Popularity</th>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: {{popularity}}%" aria-valuenow="{{popularity}}" aria-valuemin="0" aria-valuemax="100">{{popularity}}</div>
+                              </div>
+                            </td>
+                          </tr>
+                        </script>
+                      </tbody>
+                        <tbody id="details-panel-features">
+                            <script id="details-filler-features" type="text/x-handlebars-template">
+                                  <tr>
+                                    <th scope="row">Danceability</th>
+                                    <td>
+                                      <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: {{mult100 danceability}}%" aria-valuenow="{{mult100 danceability}}" aria-valuemin="0" aria-valuemax="100">{{mult100 danceability}}</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Energy</th>
+                                    <td>
+                                      <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{mult100 energy}}%" aria-valuenow="{{mult100 energy}}" aria-valuemin="0" aria-valuemax="100">{{mult100 energy}}</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Loudness</th>
+                                    <td>
+                                      {{loudness}}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Speechiness</th>
+                                    <td>
+                                      <div class="progress">
+                                          <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: {{mult100 speechiness}}%" aria-valuenow="{{mult100 speechiness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 speechiness}}</div>
+                                      </div>
+          
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Acousticness</th>
+                                    <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{mult100 acousticness}}%" aria-valuenow="{{mult100 acousticness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 acousticness}}</div>
+                                    </div>
+                                    </td>
+          
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Instrumentalness</th>
+                                    <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" style="width: {{mult100 instrumentalness}}%" aria-valuenow="{{mult100 instrumentalness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 instrumentalness}}</div>
+                                    </div>
+          
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Liveness</th>
+                                    <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{mult100 liveness}}%" aria-valuenow="{{mult100 liveness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 liveness}}</div>
+          
+                                    </div>
+                                    </td>
+                                    
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Valence</th>
+                                    <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: {{mult100 valence}}%" aria-valuenow="92" aria-valuemin="0" aria-valuemax="{{mult100 valence}}">{{mult100 valence}}</div>
+                                    </div>
+                                    </td>
+                                  </tr>
+                                  </script>
+                            
+                        </tbody>
+                            <tbody id="details-panel-analysis">
+                                <script id="details-filler-analysis" type="text/x-handlebars-template">
+                                  <tr>
+                                    <th scope="row">Tempo</th>
+                                    <td>{{track.tempo}} bpm</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Tempo Confidence</th>
+                                    <td>{{track.tempo_confidence}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Key</th>
+                                    <td>{{keySwitch track.key}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Key Confidence</th>
+                                    <td>{{track.key_confidence}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Mode</th>
+                                    <td>{{modeSwitch track.mode}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Mode Confidence</th>
+                                    <td>{{track.mode_confidence}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Time Signature</th>
+                                    <td>{{timeSignatureSwitch track.time_signature}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Time Signature Confidence</th>
+                                    <td>{{track.time_signature_confidence}}</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Duration</th>
+                                    <td>{{track.duration}}</td>
+                                  </tr>
+                                  </script>
+                            </tbody>
+                    </tbody>
+                  </table>
+                </div>    
+              </div>
+            </div>
+        </div>
+        <div id="oauth"></div>
+      </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+      (function() {
+
+        var loadingDetails,
+            loadingFeatures,
+            loadingAnalysis
+
+        var detailsFillerSource = document.getElementById('details-filler-track').innerHTML,
+            detailsFillerTemplate = Handlebars.compile(detailsFillerSource),
+            detailsFillerPlaceholder = document.getElementById('details-panel-track')
+
+        var featuresFillerSource = document.getElementById('details-filler-features').innerHTML,
+            featuresFillerTemplate = Handlebars.compile(featuresFillerSource),
+            featuresFillerPlaceholder = document.getElementById('details-panel-features')
+
+        var analysisFillerSource = document.getElementById('details-filler-analysis').innerHTML,
+            analysisFillerTemplate = Handlebars.compile(analysisFillerSource),
+            analysisFillerPlaceholder = document.getElementById('details-panel-analysis')
+        
+            Handlebars.registerHelper("mult100", function(value) {
+              var grandTotal = value * 100
+              return grandTotal.toFixed(2);
+            });
+
+            Handlebars.registerHelper("keySwitch", function(value) {
+              key = ''
+              switch(value) {
+                  case 0:
+                    key = 'C'
+                    break;
+                  case 1:
+                    key = 'C#'
+                    break;
+                  case 2:
+                    key = 'D'
+                    break;
+                  case 3:
+                    key = 'D#'
+                    break;
+                  case 4:
+                    key = 'E'
+                    break;
+                  case 5:
+                    key = 'F'
+                    break;
+                  case 6:
+                    key = 'F#'
+                    break;
+                  case 7:
+                    key = 'G'
+                    break;
+                  case 8:
+                    key = 'G#'
+                    break;
+                  case 9:
+                    key = 'A'
+                    break;
+                  case 10:
+                    key = 'A#'
+                    break;
+                  case 11:
+                    key = 'B'
+                    break;
+                  default:
+                      key = 'N/A'
+                  
+                }
+                return key
+            });
+
+            Handlebars.registerHelper("modeSwitch", function(value) {
+              mode = ''
+              if (value == 1) {
+                mode = 'Major'
+              } else if (value == 0) {
+                mode = "Minor"
+              } else {
+                mode = "N/A"
+              }
+              return mode
+            });
+
+            Handlebars.registerHelper("timeSignatureSwitch", function(value) {
+              timeSignature = 'N/A'
+              switch(value) {
+                case 3:
+                  timeSignature = "3/4"
+                  break;
+                case 4: 
+                  timeSignature = "4/4"
+                  break;
+                case 5:
+                  timeSignature = "5/4"
+                  break;
+                case 6: 
+                  timeSignature = "6/4"
+                  break;
+                case 7: 
+                  timeSignature = "7/4"
+                  break;
+              }
+              return timeSignature
+            });
+
+        function getHashParams() {
+          var hashParams = {};
+          var e, r = /([^&;=]+)=?([^&;]*)/g,
+              q = window.location.hash.substring(1);
+          while ( e = r.exec(q)) {
+             hashParams[e[1]] = decodeURIComponent(e[2]);
+          }
+          return hashParams;
+        }
+
+        function parseData(data) {
+          var str = JSON.stringify(data)
+          str = str.toString()
+          var track = JSON.parse(data)
+          album = track.album.name
+          artist = track.artists.name
+          // finish the rest
+
+           
+        }
+
+        function parseTracks(trackData) {
+          trackArray = []
+          var str = JSON.stringify(trackData)
+          str = str.toString()
+          var data = JSON.parse(str);
+          var tracks = data.tracks
+          for (i = 0; i < tracks.items.length; i++) {
+            track = tracks.items[i]
+            name = track.name
+            artists = []
+            for (j = 0; j < track.artists.length; j++) {
+              artistName = track.artists[j].name
+              artists.push(artistName)
+            }
+            artistsString = artists.join(', ').toString();
+            album = track.album.name
+            id = track.id
+            trackData = [name, artistsString, album, id]
+            trackArray.push(trackData)
+          }
+          return trackArray
+        }
+
+        function cardCreator(name, artist, album, id) {
+          var output =  `
+          <div class="mt-1">
+            <div class="card" id="${id}">
+              <div class="card-body" id="${id}">
+                <h4 class="card-title" id="${id}">${name}</h4>
+                <h6 class="card-subtitle" id="${id}">${artist}</h6>
+                <p class="card-text" id="${id}">${album}</p>
+                <!--p class="card-text">${id}</p-->
+              </div>
+            </div>
+          </div>
+            `;
+          return output;
+        }
+
+        function createTrackCardsFromData(trackData) {
+          sourceOutput = '';
+          for (i = 0; i < trackData.length; i++) {
+            var name = trackData[i][0];
+            var artists = trackData[i][1];
+            var album = trackData[i][2];
+            var id = trackData[i][3]
+            sourceOutput = sourceOutput + cardCreator(name, artists, album, id);
+          }
+          return sourceOutput
+        }
+
+        var params = getHashParams();
+        var access_token = params.access_token,
+            refresh_token = params.refresh_token,
+            error = params.error;
+
+        if (error) {
+          alert('There was an error during the authentication');
+        } else {
+          if (access_token) {
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+                  $('#login').hide();
+                  $('#loggedin').show();
+                }
+            });
+          } else {
+              // render initial screen
+              console.log("hitting this")
+              $('#login').show();
+              $('#loggedin').hide();
+          }
+
+          function getDetails(trackID) {
+            //x = document.getElementById('details-panel-track')
+            //x.style.display = "none"
+            $.ajax({
+              url: 'https://api.spotify.com/v1/tracks/' + trackID,
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+              }, 
+              success: function(response) {
+                detailsFillerPlaceholder.innerHTML = detailsFillerTemplate(response)
+              }
+            }).done(function(data) {
+              // parse that data and toss it in the template
+              console.log(data);
+              var str = JSON.stringify(data)
+              str = str.toString()
+              var track = JSON.parse(str);
+              document.getElementById("detailsName").innerHTML = track.name
+              document.getElementById("artistsName").innerHTML = track.artists[0].name
+              loadingDetails = true
+              //x.style.display = "block"
+            });
+          }
+
+          
+          function getAudioAnalysis(trackID) {
+            
+            $.ajax({
+              url: 'https://api.spotify.com/v1/audio-analysis/' + trackID,
+              headers: {
+                'Authorization':'Bearer ' + access_token
+              },
+              success: function(response) {
+                analysisFillerPlaceholder.innerHTML = analysisFillerTemplate(response)
+              }
+            }).done(function(data) {
+              loadingAnalysis = true
+              
+            });
+          }
+
+          function getAudioFeatures(trackID) {
+            
+            $.ajax({
+              url: 'https://api.spotify.com/v1/audio-features/' + trackID,
+              headers: {
+                'Authorization':'Bearer ' + access_token
+              },
+              success: function(response) {
+
+                featuresFillerPlaceholder.innerHTML = featuresFillerTemplate(response)
+              }
+            }).done(function(data) {
+             loadingFeatures = true
+             
+            });
+          }
+
+          function search() {
+            var searchValue = document.getElementById("search-input").value;
+            console.log("Searching for tracks using query: " + encodeURIComponent(searchValue));
+            stringy = encodeURIComponent(searchValue).toString()
+            $.ajax({
+              url: 'https://api.spotify.com/v1/search?q=' +
+               stringy + "&type=track",
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+              },
+              success: function(response) {
+                
+              }
+            }).done(function(data) {
+              //console.log(data);
+              loadingAnalysis = false
+              loadingDetails = false
+              loadingFeatures = false
+              tracks = parseTracks(data)
+              //console.log(tracks)
+              htmltrackformat = createTrackCardsFromData(tracks)
+              //console.log(htmltrackformat);
+              document.getElementById('search-results').innerHTML = htmltrackformat;
+              for (i = 0; i < tracks.length; i++){
+                document.getElementById(tracks[i][3]).addEventListener('click', function(event) {
+                  //console.log(event.target.id);
+                  
+                  getDetails(event.target.id);
+                  getAudioFeatures(event.target.id);
+                  getAudioAnalysis(event.target.id);
+                });
+              }
+            });
+
+          }
+
+          document.getElementById('search-button').addEventListener('click', search, false);
+          document.getElementById('search-input').addEventListener('keypress', function(e) {
+            var key = e.which || e.keyCode;
+            if (key === 13) {
+              search();
+            }
+          })
+        }
+      })();
+    </script>
+  </body>
+</html>
+
