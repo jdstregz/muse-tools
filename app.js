@@ -16,7 +16,7 @@ var musetools = require('./muse-tools')
 
 var client_id = process.env.CLIENT_ID // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri =  process.env.REDIRECT_URI; // Your redirect uri
 
 var a_token = ''
 var r_token = ''
