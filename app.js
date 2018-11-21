@@ -58,8 +58,8 @@ function getHashParams() {
 app.get('/search', function(req, res) {
   res.redirect('/searcher#' +
   querystring.stringify({
-    access_token: a_token,
-    refresh_token: r_token
+    access_token: req.query.access_token,
+    refresh_token: req.query.refresh_token
   }));
 });
 
@@ -78,6 +78,10 @@ app.get('/grouper', function(req, res) {
 
 app.get('/searcher', function(req, res) {
   res.sendFile(__dirname + '/public/search.html');
+})
+
+app.get('/playlists', function(req, res) {
+  res.sendFile(__dirname + '/public/playlists.html');
 })
 
 app.get('/login', function(req, res) {

@@ -446,7 +446,7 @@
           }
 
           function getAudioFeatures(trackID) {
-            
+            loadingFeatures = false
             $.ajax({
               url: 'https://api.spotify.com/v1/audio-features/' + trackID,
               headers: {
@@ -458,7 +458,7 @@
               }
             }).done(function(data) {
              loadingFeatures = true
-             
+            revealCardIfDoneLoading()
             });
           }
 
@@ -488,7 +488,7 @@
               for (i = 0; i < tracks.length; i++){
                 document.getElementById(tracks[i][3]).addEventListener('click', function(event) {
                   //console.log(event.target.id);
-                  
+                  hideDetails();
                   getDetails(event.target.id);
                   getAudioFeatures(event.target.id);
                   getAudioAnalysis(event.target.id);
@@ -496,6 +496,18 @@
               }
             });
 
+          }
+
+          function hideDetails() {
+            var x = document.getElementById("details-card")
+            x.style.display = "none"
+          }
+
+          function revealCardIfDoneLoading() {
+            if (loadingAnalysis && loadingDetails && loadingFeatures) {
+              var x = document.getElementById("details-card")
+              x.style.display = "block"
+            }
           }
 
           document.getElementById('search-button').addEventListener('click', search, false);

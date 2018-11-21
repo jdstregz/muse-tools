@@ -57,7 +57,7 @@
           <div class="card-body">
             <h4 class="card-title">Song Details</h4>
             <p class="card-text">Song search engine with tempo, key, danceability, and other spotify backend metrics.</p>
-            <a href="/search" class="btn btn-primary">Search</a>
+            <button id="search" class="btn btn-primary">Search</button>
           </div>
         </div>
         <div class="card text-white bg-dark mb-3 d-inline-block" style="max-width: 20rem;">
@@ -133,12 +133,11 @@
           }
           
           document.getElementById('get-playlists').addEventListener('click', function() {
-            $.ajax({
-              url: '/playlists',
-              data: {
-                'access_token': access_token
-              }
-            });
+            window.location='/playlists#access_token=' + access_token + '&refresh_token' + refresh_token
+          }, false);
+
+          document.getElementById('search').addEventListener('click', function() {
+            window.location = '/searcher#access_token=' + access_token + '&refresh_token=' + refresh_token
           }, false);
 
           document.getElementById('obtain-new-token').addEventListener('click', function() {
