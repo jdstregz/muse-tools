@@ -1,49 +1,67 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Muse Tools</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <style type="text/css">
-      #login, #loggedin {
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-    </style>
-  </head>
+<head>
+  <title>Muse Tools</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="./style/style.css">
+  <style type="text/css">
+    #login,
+    #loggedin {
+      display: none;
+    }
 
-  <body>
-    <div class="container">
-      <div id="search">
-        <h1>Muse Tools - Search</h1>
-      </div>
-      <div id="loggedin">
-        <div id="search-panel">
-          <div class="input-group">
-            <input id="search-input" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-              <button id="search-button" class="btn btn-success" type="button">Search</button>
-            </div>
+    .text-overflow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="search">
+      <h1>Muse Tools - Search</h1>
+    </div>
+    <div id="loggedin">
+      <div id="search-panel">
+        <div class="input-group">
+          <input id="search-input" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+          <div class="input-group-append">
+            <button id="search-button" class="btn btn-success" type="button">Search</button>
           </div>
         </div>
-        <div class="container">
-          <div class="row">
-            <div class="col" id="search-results"></div>
-            <div class="col">
-              <div class="card mt-1" id="details-card">
-                <div class="card-body">
-                  <h2 class="card-title" id="detailsName">Details Panel</h2>
-                  <h6 class="card-subtitle mb-1" id="artistsName">Select a track</h6>
-                  <table class="table">
-                    <tbody>
-                      <tbody id="details-panel-track">
-                        <script id="details-filler-track" type="text/x-handlebars-template">
-                          <tr>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col" id="search-results"></div>
+          <div class="col">
+            <div id="loader" class="lds-css ng-scope">
+              <div class="lds-spinner" style="100%;height:100%">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+            <div class="card mt-1" id="details-card">
+
+              <div class="card-body">
+                <h2 class="card-title" id="detailsName">Details Panel</h2>
+                <h6 class="card-subtitle mb-1" id="artistsName">Select a track</h6>
+                <table class="table">
+                  <tbody>
+                  <tbody id="details-panel-track">
+                    <script id="details-filler-track" type="text/x-handlebars-template">
+                      <tr>
                             <th scope="row">Name</th>
                             <td>{{name}}</td>
                           </tr>
@@ -76,10 +94,10 @@
                             </td>
                           </tr>
                         </script>
-                      </tbody>
-                        <tbody id="details-panel-features">
-                            <script id="details-filler-features" type="text/x-handlebars-template">
-                                  <tr>
+                  </tbody>
+                  <tbody id="details-panel-features">
+                    <script id="details-filler-features" type="text/x-handlebars-template">
+                      <tr>
                                     <th scope="row">Danceability</th>
                                     <td>
                                       <div class="progress">
@@ -107,7 +125,7 @@
                                       <div class="progress">
                                           <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: {{mult100 speechiness}}%" aria-valuenow="{{mult100 speechiness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 speechiness}}</div>
                                       </div>
-          
+
                                     </td>
                                   </tr>
                                   <tr>
@@ -117,7 +135,7 @@
                                         <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{mult100 acousticness}}%" aria-valuenow="{{mult100 acousticness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 acousticness}}</div>
                                     </div>
                                     </td>
-          
+
                                   </tr>
                                   <tr>
                                     <th scope="row">Instrumentalness</th>
@@ -125,7 +143,7 @@
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" style="width: {{mult100 instrumentalness}}%" aria-valuenow="{{mult100 instrumentalness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 instrumentalness}}</div>
                                     </div>
-          
+
                                       </td>
                                   </tr>
                                   <tr>
@@ -133,10 +151,10 @@
                                     <td>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{mult100 liveness}}%" aria-valuenow="{{mult100 liveness}}" aria-valuemin="0" aria-valuemax="100">{{mult100 liveness}}</div>
-          
+
                                     </div>
                                     </td>
-                                    
+
                                   </tr>
                                   <tr>
                                     <th scope="row">Valence</th>
@@ -147,11 +165,11 @@
                                     </td>
                                   </tr>
                                   </script>
-                            
-                        </tbody>
-                            <tbody id="details-panel-analysis">
-                                <script id="details-filler-analysis" type="text/x-handlebars-template">
-                                  <tr>
+
+                  </tbody>
+                  <tbody id="details-panel-analysis">
+                    <script id="details-filler-analysis" type="text/x-handlebars-template">
+                      <tr>
                                     <th scope="row">Tempo</th>
                                     <td>{{track.tempo}} bpm</td>
                                   </tr>
@@ -188,170 +206,173 @@
                                     <td>{{track.duration}}</td>
                                   </tr>
                                   </script>
-                            </tbody>
-                    </tbody>
-                  </table>
-                </div>    
+                  </tbody>
+                  </tbody>
+                </table>
               </div>
             </div>
+          </div>
         </div>
         <div id="oauth"></div>
       </div>
     </div>
-    </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script>
-      (function() {
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script>
+    (function() {
 
-        var loadingDetails,
-            loadingFeatures,
-            loadingAnalysis
 
-        var detailsFillerSource = document.getElementById('details-filler-track').innerHTML,
-            detailsFillerTemplate = Handlebars.compile(detailsFillerSource),
-            detailsFillerPlaceholder = document.getElementById('details-panel-track')
 
-        var featuresFillerSource = document.getElementById('details-filler-features').innerHTML,
-            featuresFillerTemplate = Handlebars.compile(featuresFillerSource),
-            featuresFillerPlaceholder = document.getElementById('details-panel-features')
+      var loadingDetails,
+        loadingFeatures,
+        loadingAnalysis
 
-        var analysisFillerSource = document.getElementById('details-filler-analysis').innerHTML,
-            analysisFillerTemplate = Handlebars.compile(analysisFillerSource),
-            analysisFillerPlaceholder = document.getElementById('details-panel-analysis')
-        
-            Handlebars.registerHelper("mult100", function(value) {
-              var grandTotal = value * 100
-              return grandTotal.toFixed(2);
-            });
+      var detailsFillerSource = document.getElementById('details-filler-track').innerHTML,
+        detailsFillerTemplate = Handlebars.compile(detailsFillerSource),
+        detailsFillerPlaceholder = document.getElementById('details-panel-track')
 
-            Handlebars.registerHelper("keySwitch", function(value) {
-              key = ''
-              switch(value) {
-                  case 0:
-                    key = 'C'
-                    break;
-                  case 1:
-                    key = 'C#'
-                    break;
-                  case 2:
-                    key = 'D'
-                    break;
-                  case 3:
-                    key = 'D#'
-                    break;
-                  case 4:
-                    key = 'E'
-                    break;
-                  case 5:
-                    key = 'F'
-                    break;
-                  case 6:
-                    key = 'F#'
-                    break;
-                  case 7:
-                    key = 'G'
-                    break;
-                  case 8:
-                    key = 'G#'
-                    break;
-                  case 9:
-                    key = 'A'
-                    break;
-                  case 10:
-                    key = 'A#'
-                    break;
-                  case 11:
-                    key = 'B'
-                    break;
-                  default:
-                      key = 'N/A'
-                  
-                }
-                return key
-            });
+      var featuresFillerSource = document.getElementById('details-filler-features').innerHTML,
+        featuresFillerTemplate = Handlebars.compile(featuresFillerSource),
+        featuresFillerPlaceholder = document.getElementById('details-panel-features')
 
-            Handlebars.registerHelper("modeSwitch", function(value) {
-              mode = ''
-              if (value == 1) {
-                mode = 'Major'
-              } else if (value == 0) {
-                mode = "Minor"
-              } else {
-                mode = "N/A"
-              }
-              return mode
-            });
+      var analysisFillerSource = document.getElementById('details-filler-analysis').innerHTML,
+        analysisFillerTemplate = Handlebars.compile(analysisFillerSource),
+        analysisFillerPlaceholder = document.getElementById('details-panel-analysis')
 
-            Handlebars.registerHelper("timeSignatureSwitch", function(value) {
-              timeSignature = 'N/A'
-              switch(value) {
-                case 3:
-                  timeSignature = "3/4"
-                  break;
-                case 4: 
-                  timeSignature = "4/4"
-                  break;
-                case 5:
-                  timeSignature = "5/4"
-                  break;
-                case 6: 
-                  timeSignature = "6/4"
-                  break;
-                case 7: 
-                  timeSignature = "7/4"
-                  break;
-              }
-              return timeSignature
-            });
+      Handlebars.registerHelper("mult100", function(value) {
+        var grandTotal = value * 100
+        return grandTotal.toFixed(2);
+      });
 
-        function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
-          while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
+      Handlebars.registerHelper("keySwitch", function(value) {
+        key = ''
+        switch (value) {
+          case 0:
+            key = 'C'
+            break;
+          case 1:
+            key = 'C#'
+            break;
+          case 2:
+            key = 'D'
+            break;
+          case 3:
+            key = 'D#'
+            break;
+          case 4:
+            key = 'E'
+            break;
+          case 5:
+            key = 'F'
+            break;
+          case 6:
+            key = 'F#'
+            break;
+          case 7:
+            key = 'G'
+            break;
+          case 8:
+            key = 'G#'
+            break;
+          case 9:
+            key = 'A'
+            break;
+          case 10:
+            key = 'A#'
+            break;
+          case 11:
+            key = 'B'
+            break;
+          default:
+            key = 'N/A'
+
         }
+        return key
+      });
 
-        function parseData(data) {
-          var str = JSON.stringify(data)
-          str = str.toString()
-          var track = JSON.parse(data)
+      Handlebars.registerHelper("modeSwitch", function(value) {
+        mode = ''
+        if (value == 1) {
+          mode = 'Major'
+        } else if (value == 0) {
+          mode = "Minor"
+        } else {
+          mode = "N/A"
+        }
+        return mode
+      });
+
+      Handlebars.registerHelper("timeSignatureSwitch", function(value) {
+        timeSignature = 'N/A'
+        switch (value) {
+          case 3:
+            timeSignature = "3/4"
+            break;
+          case 4:
+            timeSignature = "4/4"
+            break;
+          case 5:
+            timeSignature = "5/4"
+            break;
+          case 6:
+            timeSignature = "6/4"
+            break;
+          case 7:
+            timeSignature = "7/4"
+            break;
+        }
+        return timeSignature
+      });
+
+      function getHashParams() {
+        var hashParams = {};
+        var e, r = /([^&;=]+)=?([^&;]*)/g,
+          q = window.location.hash.substring(1);
+        while (e = r.exec(q)) {
+          hashParams[e[1]] = decodeURIComponent(e[2]);
+        }
+        return hashParams;
+      }
+
+      function parseData(data) {
+        var str = JSON.stringify(data)
+        str = str.toString()
+        var track = JSON.parse(data)
+        album = track.album.name
+        artist = track.artists.name
+        // finish the rest
+
+
+      }
+
+      function parseTracks(trackData) {
+        trackArray = []
+        var str = JSON.stringify(trackData)
+        str = str.toString()
+        var data = JSON.parse(str);
+        var tracks = data.tracks
+        for (i = 0; i < tracks.items.length; i++) {
+          track = tracks.items[i]
+          name = track.name
+          artists = []
+          for (j = 0; j < track.artists.length; j++) {
+            artistName = track.artists[j].name
+            artists.push(artistName)
+          }
+          artistsString = artists.join(', ').toString();
           album = track.album.name
-          artist = track.artists.name
-          // finish the rest
-
-           
+          id = track.id
+          trackData = [name, artistsString, album, id]
+          trackArray.push(trackData)
         }
+        return trackArray
+      }
 
-        function parseTracks(trackData) {
-          trackArray = []
-          var str = JSON.stringify(trackData)
-          str = str.toString()
-          var data = JSON.parse(str);
-          var tracks = data.tracks
-          for (i = 0; i < tracks.items.length; i++) {
-            track = tracks.items[i]
-            name = track.name
-            artists = []
-            for (j = 0; j < track.artists.length; j++) {
-              artistName = track.artists[j].name
-              artists.push(artistName)
-            }
-            artistsString = artists.join(', ').toString();
-            album = track.album.name
-            id = track.id
-            trackData = [name, artistsString, album, id]
-            trackArray.push(trackData)
-          }
-          return trackArray
-        }
-
-        function cardCreator(name, artist, album, id) {
-          var output =  `
+      function cardCreator(name, artist, album, id) {
+        var output =
+          `
           <div class="mt-1">
             <div class="card" id="${id}">
               <div class="card-body" id="${id}">
@@ -363,163 +384,174 @@
             </div>
           </div>
             `;
-          return output;
+        return output;
+      }
+
+      function createTrackCardsFromData(trackData) {
+        sourceOutput = '';
+        for (i = 0; i < trackData.length; i++) {
+          var name = trackData[i][0];
+          var artists = trackData[i][1];
+          var album = trackData[i][2];
+          var id = trackData[i][3]
+          sourceOutput = sourceOutput + cardCreator(name, artists, album, id);
         }
+        return sourceOutput
+      }
 
-        function createTrackCardsFromData(trackData) {
-          sourceOutput = '';
-          for (i = 0; i < trackData.length; i++) {
-            var name = trackData[i][0];
-            var artists = trackData[i][1];
-            var album = trackData[i][2];
-            var id = trackData[i][3]
-            sourceOutput = sourceOutput + cardCreator(name, artists, album, id);
-          }
-          return sourceOutput
-        }
+      var params = getHashParams();
+      var access_token = params.access_token,
+        refresh_token = params.refresh_token,
+        error = params.error;
 
-        var params = getHashParams();
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
+      var loadingspinner = document.getElementById("loader")
+      loadingspinner.style.display = "none"
 
-        if (error) {
-          alert('There was an error during the authentication');
+      if (error) {
+        alert('There was an error during the authentication');
+      } else {
+        if (access_token) {
+          $.ajax({
+            url: 'https://api.spotify.com/v1/me',
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+              $('#login').hide();
+              $('#loggedin').show();
+            }
+          });
         } else {
-          if (access_token) {
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
-                  $('#login').hide();
-                  $('#loggedin').show();
-                }
-            });
-          } else {
-              // render initial screen
-              console.log("hitting this")
-              $('#login').show();
-              $('#loggedin').hide();
-          }
-
-          function getDetails(trackID) {
-            //x = document.getElementById('details-panel-track')
-            //x.style.display = "none"
-            $.ajax({
-              url: 'https://api.spotify.com/v1/tracks/' + trackID,
-              headers: {
-                'Authorization': 'Bearer ' + access_token
-              }, 
-              success: function(response) {
-                detailsFillerPlaceholder.innerHTML = detailsFillerTemplate(response)
-              }
-            }).done(function(data) {
-              // parse that data and toss it in the template
-              console.log(data);
-              var str = JSON.stringify(data)
-              str = str.toString()
-              var track = JSON.parse(str);
-              document.getElementById("detailsName").innerHTML = track.name
-              document.getElementById("artistsName").innerHTML = track.artists[0].name
-              loadingDetails = true
-              //x.style.display = "block"
-            });
-          }
-
-          
-          function getAudioAnalysis(trackID) {
-            
-            $.ajax({
-              url: 'https://api.spotify.com/v1/audio-analysis/' + trackID,
-              headers: {
-                'Authorization':'Bearer ' + access_token
-              },
-              success: function(response) {
-                analysisFillerPlaceholder.innerHTML = analysisFillerTemplate(response)
-              }
-            }).done(function(data) {
-              loadingAnalysis = true
-              
-            });
-          }
-
-          function getAudioFeatures(trackID) {
-            loadingFeatures = false
-            $.ajax({
-              url: 'https://api.spotify.com/v1/audio-features/' + trackID,
-              headers: {
-                'Authorization':'Bearer ' + access_token
-              },
-              success: function(response) {
-
-                featuresFillerPlaceholder.innerHTML = featuresFillerTemplate(response)
-              }
-            }).done(function(data) {
-             loadingFeatures = true
-            revealCardIfDoneLoading()
-            });
-          }
-
-          function search() {
-            var searchValue = document.getElementById("search-input").value;
-            console.log("Searching for tracks using query: " + encodeURIComponent(searchValue));
-            stringy = encodeURIComponent(searchValue).toString()
-            $.ajax({
-              url: 'https://api.spotify.com/v1/search?q=' +
-               stringy + "&type=track",
-              headers: {
-                'Authorization': 'Bearer ' + access_token
-              },
-              success: function(response) {
-                
-              }
-            }).done(function(data) {
-              //console.log(data);
-              loadingAnalysis = false
-              loadingDetails = false
-              loadingFeatures = false
-              tracks = parseTracks(data)
-              //console.log(tracks)
-              htmltrackformat = createTrackCardsFromData(tracks)
-              //console.log(htmltrackformat);
-              document.getElementById('search-results').innerHTML = htmltrackformat;
-              for (i = 0; i < tracks.length; i++){
-                document.getElementById(tracks[i][3]).addEventListener('click', function(event) {
-                  //console.log(event.target.id);
-                  hideDetails();
-                  getDetails(event.target.id);
-                  getAudioFeatures(event.target.id);
-                  getAudioAnalysis(event.target.id);
-                });
-              }
-            });
-
-          }
-
-          function hideDetails() {
-            var x = document.getElementById("details-card")
-            x.style.display = "none"
-          }
-
-          function revealCardIfDoneLoading() {
-            if (loadingAnalysis && loadingDetails && loadingFeatures) {
-              var x = document.getElementById("details-card")
-              x.style.display = "block"
-            }
-          }
-
-          document.getElementById('search-button').addEventListener('click', search, false);
-          document.getElementById('search-input').addEventListener('keypress', function(e) {
-            var key = e.which || e.keyCode;
-            if (key === 13) {
-              search();
-            }
-          })
+          // render initial screen
+          console.log("hitting this")
+          $('#login').show();
+          $('#loggedin').hide();
         }
-      })();
-    </script>
-  </body>
-</html>
 
+        function getDetails(trackID) {
+          //x = document.getElementById('details-panel-track')
+          //x.style.display = "none"
+          $.ajax({
+            url: 'https://api.spotify.com/v1/tracks/' + trackID,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+              detailsFillerPlaceholder.innerHTML = detailsFillerTemplate(response)
+            }
+          }).done(function(data) {
+            // parse that data and toss it in the template
+            console.log(data);
+            var str = JSON.stringify(data)
+            str = str.toString()
+            var track = JSON.parse(str);
+            document.getElementById("detailsName").innerHTML = track.name
+            document.getElementById("artistsName").innerHTML = track.artists[0].name
+            loadingDetails = true
+            //x.style.display = "block"
+            revealCardIfDoneLoading()
+          });
+        }
+
+
+        function getAudioAnalysis(trackID) {
+
+          $.ajax({
+            url: 'https://api.spotify.com/v1/audio-analysis/' + trackID,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+              analysisFillerPlaceholder.innerHTML = analysisFillerTemplate(response)
+            }
+          }).done(function(data) {
+            loadingAnalysis = true
+            revealCardIfDoneLoading()
+          });
+        }
+
+        function getAudioFeatures(trackID) {
+          loadingFeatures = false
+          $.ajax({
+            url: 'https://api.spotify.com/v1/audio-features/' + trackID,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+
+              featuresFillerPlaceholder.innerHTML = featuresFillerTemplate(response)
+            }
+          }).done(function(data) {
+            loadingFeatures = true
+            revealCardIfDoneLoading()
+          });
+        }
+
+        function search() {
+          var searchValue = document.getElementById("search-input").value;
+          console.log("Searching for tracks using query: " + encodeURIComponent(searchValue));
+          stringy = encodeURIComponent(searchValue).toString()
+          $.ajax({
+            url: 'https://api.spotify.com/v1/search?q=' +
+              stringy + "&type=track",
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+
+            }
+          }).done(function(data) {
+            //console.log(data);
+            loadingAnalysis = false
+            loadingDetails = false
+            loadingFeatures = false
+            tracks = parseTracks(data)
+            //console.log(tracks)
+            htmltrackformat = createTrackCardsFromData(tracks)
+            //console.log(htmltrackformat);
+            document.getElementById('search-results').innerHTML = htmltrackformat;
+            for (i = 0; i < tracks.length; i++) {
+              document.getElementById(tracks[i][3]).addEventListener('click', function(event) {
+                //console.log(event.target.id);
+                hideDetails();
+                getDetails(event.target.id);
+                getAudioFeatures(event.target.id);
+                getAudioAnalysis(event.target.id);
+              });
+            }
+          });
+
+        }
+
+        function hideDetails() {
+          loadingAnalysis = false
+          loadingDetails = false
+          loadingFeatures = false
+          var x = document.getElementById("details-card")
+          x.style.display = "none"
+          var loadingspinner = document.getElementById("loader")
+          loadingspinner.style.display = "block"
+        }
+
+        function revealCardIfDoneLoading() {
+          if (loadingAnalysis && loadingDetails && loadingFeatures) {
+            var x = document.getElementById("details-card")
+            x.style.display = "block"
+            var loadingspinner = document.getElementById("loader")
+            loadingspinner.style.display = "none"
+          }
+        }
+
+        document.getElementById('search-button').addEventListener('click', search, false);
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+          var key = e.which || e.keyCode;
+          if (key === 13) {
+            search();
+          }
+        })
+      }
+    })();
+  </script>
+</body>
+
+</html>

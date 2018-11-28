@@ -1,124 +1,231 @@
+<!doctype html>
 <html>
-    <head>
-        <title>Muse Tools - Playlists</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <style type="text/css">
-        #login, #loggedin {
-            display: none;
-        }
-        .text-overflow {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 500px;
-        }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div id="loggedin">
-                <h1>Playlists:</h1>
-                <div class="card-columns">
-                    <div class="card text-white bg-dark mb-3 d-inline-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Recently Added</h4>
-                            <p class="card-text">
-                                Have a lot of large playlists? It's easy to lose track of all of the new songs you've added to them. 
-                                Automatically add them all to a recently added playlist. 
-                            </p>
-                            <button id="recently-added" class="btn btn-primary">Create</a>
-                        </div>
-                    </div>
-                    <div class="card text-white bg-dark mb-3 d-inline-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Playlist Mutator</h4>
-                            <p class="card-text">
-                                Take an existing playlist or two and mutate them by funky metrics. A playlist of only B minor tracks from the 80s with danceability ratings above 70? Say less.
-                            </p>
-                            <button id="playlist-mutator" class="btn btn-primary">Get Funky</a>
-                        </div>
-                    </div>
-                    <div class="card text-white bg-dark mb-3 d-inline-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Sentence Playlist</h4>
-                            <p class="card-text">
-                                Write out a sentence and hit go. You'll get a playlist that writes out your sentence word for word. Great for a good laugh or a cryptic message!
-                            </p>
-                            <button id="sentence-playlist" class="btn btn-primary">Sentences Rule!</a>
-                        </div>
-                    </div>
-                    <div class="card text-white bg-dark mb-3 d-inline-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Import</h4>
-                            <p class="card-text">
-                                Got the list but don't want to do it yourself? Toss the sucker our way, we'll import it for you.
-                            </p>
-                            <button id="import-playlist" class="btn btn-primary">I'm Lazy!</a>
-                        </div>
-                    </div>
-                    <div class="card text-white bg-dark mb-3 d-inline-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Seed Recommender</h4>
-                            <p class="card-text">
-                                Now we're talkin. Create your own playlist of recommendations taken from your own seed values. Tunable track attributes, seed tracks, artists, and genres for recommend starting points. This will get interesting.
-                            </p>
-                            <button id="seed-recommends" class="btn btn-primary">Seeds are chill</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
 
+<head>
+  <title>Muse Tools - Playlists</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <style type="text/css">
+    #login,
+    #loggedin {
+      display: none;
+    }
+
+    .text-overflow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="loggedin">
+      <h1>Playlists:</h1>
+      <div class="card-columns">
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Recently Added</h4>
+            <p class="card-text">
+              Have a lot of large playlists? It's easy to lose track of all of the new songs you've added to them.
+              Automatically add them all to a recently added playlist.
+            </p>
+            <button id="recently-added-button" data-toggle="modal" type="button" data-target="#recentlyAdded" class="btn btn-primary">Create</a>
+          </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
-        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script>
-                (function() {
-          
-                  /**
-                   * Obtains parameters from the hash of the URL
-                   * @return Object
-                   */
-                  function getHashParams() {
-                    var hashParams = {};
-                    var e, r = /([^&;=]+)=?([^&;]*)/g,
-                        q = window.location.hash.substring(1);
-                    while ( e = r.exec(q)) {
-                       hashParams[e[1]] = decodeURIComponent(e[2]);
-                    }
-                    return hashParams;
-                  }
-          
-                  var params = getHashParams();
-          
-                  var access_token = params.access_token,
-                      refresh_token = params.refresh_token,
-                      error = params.error;
-          
-                  if (error) {
-                    alert('There was an error during the authentication');
-                  } else {
-                    if (access_token) {        
-                      $.ajax({
-                          url: 'https://api.spotify.com/v1/me',
-                          headers: {
-                            'Authorization': 'Bearer ' + access_token
-                          },
-                          success: function(response) {
-                            $('#login').hide();
-                            $('#loggedin').show();
-                          }
-                      });
-                    } else {
-                        // render initial screen
-                        $('#login').show();
-                        $('#loggedin').hide();
-                    }
-                  }
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Playlist Mutator</h4>
+            <p class="card-text">
+              Take an existing playlist or two and mutate them by funky metrics. A playlist of only B minor tracks from the 80s with danceability ratings above 70? Say less.
+            </p>
+            <button id="playlist-mutator" class="btn btn-primary">Get Funky</a>
+          </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Sentence Playlist</h4>
+            <p class="card-text">
+              Write out a sentence and hit go. You'll get a playlist that writes out your sentence word for word. Great for a good laugh or a cryptic message!
+            </p>
+            <button id="sentence-playlist" class="btn btn-primary">Sentences Rule!</a>
+          </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Import</h4>
+            <p class="card-text">
+              Got the list but don't want to do it yourself? Toss the sucker our way, we'll import it for you.
+            </p>
+            <button id="import-playlist" class="btn btn-primary">I'm Lazy!</a>
+          </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Seed Recommender</h4>
+            <p class="card-text">
+              Now we're talkin. Create your own playlist of recommendations taken from your own seed values. Tunable track attributes, seed tracks, artists, and genres for recommend starting points. This will get interesting.
+            </p>
+            <button type="button" data-toggle="modal" data-target="#seedRecommend" id="seed-recommends" class="btn btn-primary">Seeds are chill</a>
+          </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Time Machine</h4>
+            <p class="card-text">
+              Wanna know what you liked/added to your library way back when? This scans your profile to see what your guilty pleasure was. Just toss in a date span and get ready for those throwbacks.
+            </p>
+            <button id="time-machine" class="btn btn-primary">Used To Be Emo :(</a>
+          </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 d-inline-block">
+          <div class="card-body">
+            <h4 class="card-title">Top Tracks</h4>
+            <p class="card-text">
+              See what your top tracks are for the short/medium/long term. Go ahead let's see what you got on repeat weirdo.
+            </p>
+            <button id="top-tracks" class="btn btn-primary">Tippy Top</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button trigger modal -->
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="seedRecommend" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal3Label">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="recentlyAdded" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal3Label">Recently Added</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>For some reason, spotify does not have a Recently Added Playlist. For someone who has many or long playlists, it's easy to lose most recently added songs when you're
+            in a rush. This playlist gathers all of your most recently added songs from all of your playlists from the specified date. Simply give a playlist name, date span, and
+            any playlists you want to exclude from the scan.</p>
+            <div class="alert alert-warning" role="alert">
+              <strong>Warning!</strong> If you specify a playlist name that already exists in your profile, it will be overwritten!
+            </div>
+            <form class="mt-2">
+              <div class="form-group">
+                <label for="PlaylistName"><b>Playlist Name</b></label>
+                <input type="text" class="form-control" id="recentlyAddedPlaylistName" placeholder="Playlist Name">
+              </div>
+              <div class="form-group">
+                <label for="ExcludePlaylists"><b>Excluded Playlists (Seperate with commas ',')</b></label>
+                <input type="text" class="form-control" id="excludedPlaylists" placeholder="Excluded Playlists">
+              </div>
+              <div class="form-group">
+                <label for="ExcludePlaylists"><b>How many weeks back?</b></label>
+                <input type="number" class="form-control" id="weeksBack" name="quantity" min="1" value="1">
+              </div>
+            </form>
+            <button type="button" class="btn btn-success" id="createRecentlyAdded">Create</button>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button trigger modal -->
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script>
+    (function() {
+
+      /**
+       * Obtains parameters from the hash of the URL
+       * @return Object
+       */
+      function getHashParams() {
+        var hashParams = {};
+        var e, r = /([^&;=]+)=?([^&;]*)/g,
+          q = window.location.hash.substring(1);
+        while (e = r.exec(q)) {
+          hashParams[e[1]] = decodeURIComponent(e[2]);
+        }
+        return hashParams;
+      }
+
+      var params = getHashParams();
+
+      var access_token = params.access_token,
+        refresh_token = params.refresh_token,
+        error = params.error;
+
+      if (error) {
+        alert('There was an error during the authentication');
+      } else {
+        if (access_token) {
+          $.ajax({
+            url: 'https://api.spotify.com/v1/me',
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            success: function(response) {
+              $('#login').hide();
+              $('#loggedin').show();
+            }
+          });
+        } else {
+          // render initial screen
+          $('#login').show();
+          $('#loggedin').hide();
+        }
+      }
+
+      // Click Listeners
+      document.getElementById('createRecentlyAdded').addEventListener('click', function(event) {
+        var playlistName = document.getElementById('recentlyAddedPlaylistName').value;
+        var excludedPlaylists = document.getElementById('excludedPlaylists').value;
+        var weeksback = document.getElementById('weeksBack').value;
+
+        $.ajax({
+          url: '/recentlyAdded',
+          data: {
+            'access_token': access_token,
+            'excludedPlaylists': excludedPlaylists,
+            'weeksback' = weeksback
+          }
+        }).done(function(data) {
+
+        });
+      }, false);
 
 
+    })();
+  </script>
+</body>
 
-                })();
-              </script>
-    </body>
 </html>

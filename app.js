@@ -197,6 +197,12 @@ app.get('/playlists', function(req, res) {
   musetools.getRecentlyAddedTracksPlaylist();
 });
 
+app.get('/recentlyAdded', function(req, res) {
+  var access_token = req.query.access_token;
+  var username = req.query.username;
+  
+})
+
 app.get('/trackdetail', function(req, res) {
   var access_token = req.query.access_token;
   var trackID = req.query.track_id;
