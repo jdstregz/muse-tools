@@ -25,6 +25,11 @@
 
 <body>
   <div class="container">
+    <div id="login">
+      <h3>In order to view this page, you need to have a valid access token to the
+          Spotify API. Return to the <a href='/'>homepage</a> and log in!
+      </h3>
+    </div>
     <div id="loggedin">
       <h1>Playlists:</h1>
       <div class="card-columns">
@@ -196,6 +201,10 @@
             success: function(response) {
               $('#login').hide();
               $('#loggedin').show();
+            },
+            error: function(response) {
+              $('#login').show();
+              $('#loggedin').hide();
             }
           });
         } else {
@@ -216,7 +225,7 @@
           data: {
             'access_token': access_token,
             'excludedPlaylists': excludedPlaylists,
-            'weeksback' = weeksback
+            'weeksback' : weeksback
           }
         }).done(function(data) {
 
