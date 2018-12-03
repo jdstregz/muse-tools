@@ -1,0 +1,40 @@
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="" id="muse-tools-title" >Muse Tools</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <button class="btn btn-dark mx-1" id="homepage-nav-link">Home</button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-dark mx-1" id="search-nav-link">Search</button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-dark mx-1" id="playlist-nav-link">Playlists</button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-dark mx-1 disabled" id="group-nav-link">Group Listen</button>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <span class="navbar-text my-2 my-sm-0 mr-3" id="name">
+        Hello
+        </span>
+        <button class="btn btn-success my-2 my-sm-0" id="log-in-top" type="submit">Log in with Spotify</button>
+        <button class="btn btn-danger my-2 my-sm-0" id="log-out-top" type="submit">Log out</button>
+      </form>
+    </div>
+  </nav>
+  <script>
+    if(window.location.href.includes('search')) {
+      document.getElementById('search-nav-link').classList = 'btn btn-outline-light mx-1';
+    }
+    else if (window.location.href.includes('playlist')) {
+      document.getElementById('playlist-nav-link').classList = 'btn btn-outline-light mx-1'
+    }
+
+  </script>

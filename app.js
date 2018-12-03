@@ -12,9 +12,9 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-var musetools = require('./muse-tools')
-
-var client_id = process.env.CLIENT_ID // Your client id
+var musetools = require('./muse-tools');
+var playlist_tools = require('./playlist-tools');
+var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
 var redirect_uri =  process.env.REDIRECT_URI; // Your redirect uri
 
@@ -199,9 +199,26 @@ app.get('/playlists', function(req, res) {
 
 app.get('/recentlyAdded', function(req, res) {
   var access_token = req.query.access_token;
-  var username = req.query.username;
-  
-})
+  var playlistName = req.query.playlistName;
+  var excludedPlaylists = req.query.excludedPlaylists;
+  var weeksback = req.query.weeksback;
+  /*
+  var userID = playlist_tools.getUserID(access_token, function(user_id, error) {
+    if (!error) {
+      res.send({
+        'userID': user_id
+      });
+    }
+  });
+  */
+  playlist_tools.createRecentlyAddedPlaylist(access_token, [], "test", "test", function(data) {
+    res.send({
+      'data': data
+    });
+  });
+
+
+});
 
 app.get('/trackdetail', function(req, res) {
   var access_token = req.query.access_token;
