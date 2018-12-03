@@ -1,98 +1,71 @@
-@keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@-webkit-keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-.lds-spinner {
-  position: relative;
-}
-.lds-spinner div {
-  left: 94px;
-  top: 48px;
-  position: absolute;
-  -webkit-animation: lds-spinner linear 1s infinite;
-  animation: lds-spinner linear 1s infinite;
-  background: #72b8ff;
-  width: 12px;
-  height: 24px;
-  border-radius: 40%;
-  -webkit-transform-origin: 6px 52px;
-  transform-origin: 6px 52px;
-}
-.lds-spinner div:nth-child(1) {
-  -webkit-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-animation-delay: -0.9s;
-  animation-delay: -0.9s;
-}
-.lds-spinner div:nth-child(2) {
-  -webkit-transform: rotate(36deg);
-  transform: rotate(36deg);
-  -webkit-animation-delay: -0.8s;
-  animation-delay: -0.8s;
-}
-.lds-spinner div:nth-child(3) {
-  -webkit-transform: rotate(72deg);
-  transform: rotate(72deg);
-  -webkit-animation-delay: -0.7s;
-  animation-delay: -0.7s;
-}
-.lds-spinner div:nth-child(4) {
-  -webkit-transform: rotate(108deg);
-  transform: rotate(108deg);
-  -webkit-animation-delay: -0.6s;
-  animation-delay: -0.6s;
-}
-.lds-spinner div:nth-child(5) {
-  -webkit-transform: rotate(144deg);
-  transform: rotate(144deg);
-  -webkit-animation-delay: -0.5s;
-  animation-delay: -0.5s;
-}
-.lds-spinner div:nth-child(6) {
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
-  -webkit-animation-delay: -0.4s;
-  animation-delay: -0.4s;
-}
-.lds-spinner div:nth-child(7) {
-  -webkit-transform: rotate(216deg);
-  transform: rotate(216deg);
-  -webkit-animation-delay: -0.3s;
-  animation-delay: -0.3s;
-}
-.lds-spinner div:nth-child(8) {
-  -webkit-transform: rotate(252deg);
-  transform: rotate(252deg);
-  -webkit-animation-delay: -0.2s;
-  animation-delay: -0.2s;
-}
-.lds-spinner div:nth-child(9) {
-  -webkit-transform: rotate(288deg);
-  transform: rotate(288deg);
-  -webkit-animation-delay: -0.1s;
-  animation-delay: -0.1s;
-}
-.lds-spinner div:nth-child(10) {
-  -webkit-transform: rotate(324deg);
-  transform: rotate(324deg);
-  -webkit-animation-delay: 0s;
-  animation-delay: 0s;
-}
-.lds-spinner {
-  width: 66px !important;
-  height: 66px !important;
-  -webkit-transform: translate(-33px, -33px) scale(0.33) translate(33px, 33px);
-  transform: translate(-33px, -33px) scale(0.33) translate(33px, 33px);
-}
+
+    .btn-github {
+      color: #fff;
+      background-color: #6610f2;
+      border-color: #6610f2;
+    }
+
+    .btn-github:hover {
+      color: #fff;
+      background-color: #6610f2;
+      border-color: #6610f2;
+    }
+
+    .btn-outline-github {
+      color: #6610f2;
+      background-color: transparent;
+      background-image: none;
+      border-color: #6610f2;
+    }
+
+    .btn-outline-github:hover {
+      color: #fff;
+      background-color: #6610f2;
+      border-color: #6610f2;
+    }
+
+    .btn-outline-github:focus, .btn-outline-github.focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+    }
+
+    .btn-outline-github.disabled, .btn-outline-github:disabled {
+      color: #6610f2;
+      background-color: transparent;
+    }
+
+    .btn-outline-github:not(:disabled):not(.disabled):active, .btn-outline-github:not(:disabled):not(.disabled).active,
+    .show > .btn-outline-github.dropdown-toggle {
+      color: #fff;
+      background-color: #6610f2;
+      border-color: #6610f2;
+    }
+
+    .btn-outline-github:not(:disabled):not(.disabled):active:focus, .btn-outline-github:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-outline-github.dropdown-toggle:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+    }
+
+    .btn-github:focus, .btn-github.focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+    }
+
+
+
+    .btn-github:not(:disabled):not(.disabled):active, .btn-github:not(:disabled):not(.disabled).active,
+    .show > .btn-github.dropdown-toggle {
+      color: #fff;
+      background-color: #1e7e34;
+      border-color: #1c7430;
+    }
+
+    .btn-github:not(:disabled):not(.disabled):active:focus, .btn-github:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-success.dropdown-toggle:focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+    }
+
+    .text-overflow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 500px;
+    }

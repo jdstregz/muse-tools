@@ -4,6 +4,8 @@
 <head>
   <title>Muse Tools</title>
   <link rel="stylesheet" href="./css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./js/jquery.min.js"></script>
   <style type="text/css">
     #log-out-top,
     #log-in-top,
@@ -13,121 +15,17 @@
       display: none;
     }
 
-    .btn-github {
-      color: #fff;
-      background-color: #6610f2;
-      border-color: #6610f2;
-    }
-
-    .btn-github:hover {
-      color: #fff;
-      background-color: #6610f2;
-      border-color: #6610f2;
-    }
-
-    .btn-outline-github {
-      color: #6610f2;
-      background-color: transparent;
-      background-image: none;
-      border-color: #6610f2;
-    }
-
-    .btn-outline-github:hover {
-      color: #fff;
-      background-color: #6610f2;
-      border-color: #6610f2;
-    }
-
-    .btn-outline-github:focus, .btn-outline-github.focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-    }
-
-    .btn-outline-github.disabled, .btn-outline-github:disabled {
-      color: #6610f2;
-      background-color: transparent;
-    }
-
-    .btn-outline-github:not(:disabled):not(.disabled):active, .btn-outline-github:not(:disabled):not(.disabled).active,
-    .show > .btn-outline-github.dropdown-toggle {
-      color: #fff;
-      background-color: #6610f2;
-      border-color: #6610f2;
-    }
-
-    .btn-outline-github:not(:disabled):not(.disabled):active:focus, .btn-outline-github:not(:disabled):not(.disabled).active:focus,
-    .show > .btn-outline-github.dropdown-toggle:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-    }
-
-    .btn-github:focus, .btn-github.focus {
-      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
-    }
-
-
-
-    .btn-github:not(:disabled):not(.disabled):active, .btn-github:not(:disabled):not(.disabled).active,
-    .show > .btn-github.dropdown-toggle {
-      color: #fff;
-      background-color: #1e7e34;
-      border-color: #1c7430;
-    }
-
-    .btn-github:not(:disabled):not(.disabled):active:focus, .btn-github:not(:disabled):not(.disabled).active:focus,
-    .show > .btn-success.dropdown-toggle:focus {
-      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
-    }
-
-    .text-overflow {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 500px;
-    }
   </style>
+  <script>
+  $(function(){
+    $("#navbar").load("nav.html");
+  });
+  </script>
 </head>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="" id="muse-tools-title" >Muse Tools</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div id="navbar">
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <button class="btn btn-outline-light mr-1" id="homepage-nav-link">Home</button>
-      </li>
-      <li class="nav-item">
-        <button class="btn btn-dark mx-1" id="search-nav-link">Search</button>
-      </li>
-      <li class="nav-item">
-        <button class="btn btn-dark mx-1" id="playlist-nav-link">Playlists</button>
-      </li>
-      <li class="nav-item">
-        <button class="btn btn-dark mx-1" id="group-nav-link">Group Listen</button>
-      </li>
-      <li class="nav-item">
-        <button class="btn btn-dark disabled mx-1" id="diabled-nav-link">Disabled</button>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <span class="navbar-text my-2 my-sm-0 mr-3" id="name">
-      Hello
-      </span>
-      <button class="btn btn-success my-2 my-sm-0" id="log-in-top" type="submit">Log in with Spotify</button>
-      <button class="btn btn-danger my-2 my-sm-0" id="log-out-top" type="submit">Log out</button>
-    </form>
-  </div>
-</nav>
-<nav class="navbar fixed-bottom navbar-dark bg-dark">
-  <a class="navbar-brand" href="#!">Created by Joshua Streger</a>
-  <div>
-    <a class="btn btn-info mx-1" href="/">My Site</a>
-    <a class="btn btn-success mx-1" href="/">Spotify</a>
-    <a class="btn btn-github mx-1" href="/">Github</a>
-    <a class="btn btn-primary mx-1" href="/">LinkedIn</a>
-  </div>
+</div>
 
-</nav>
 <body>
 
     <div class="jumbotron jumbotron-fluid">
@@ -147,7 +45,7 @@
         </p>
       </div>
     </div>
-  
+
 
   <div class="container">
     <div id="login">
@@ -156,7 +54,7 @@
     <div id="loggedin"></div>
   </div>
 
-  <div class="container pt-3">
+  <div class="container pt-3 pb-5">
     <div class="card-deck">
       <div class="card text-white bg-dark mb-3 d-inline-block" style="max-width: 20rem;">
         <div class="card-body">
@@ -184,24 +82,18 @@
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
   <script src="./js/auth_check.js"></script>
   <script>
     (function() {
 
-        if(access_token) {
-          document.getElementById('muse-tools-title').href = '/#access_token=' + access_token + '&refresh_token=' + refresh_token
-        } else {
-          document.getElementById('muse-tools-title').href = '/'
-        }
+
 
         document.getElementById('get-playlists').addEventListener('click', function() {
           window.location = '/playlists#access_token=' + access_token + '&refresh_token' + refresh_token
         }, false);
 
-        document.getElementById('search-nav-link').addEventListener('click', function() {
-          window.location = '/searcher#access_token=' + access_token + '&refresh_token=' + refresh_token
-        }, false);
+
 
         document.getElementById('search').addEventListener('click', function() {
           window.location = '/searcher#access_token=' + access_token + '&refresh_token=' + refresh_token
