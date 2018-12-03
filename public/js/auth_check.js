@@ -4,7 +4,7 @@
  */
 function changeButtonNavLayout(selected) {
   if (selected == 'home') {
-    document.getElementById('homepage-nav-link').className = "btn btn-outline-light mr-1"
+    document.getElementById('homepage-nav-link').className = "btn btn-outline-light mr-1";
   }
 }
 
@@ -46,40 +46,6 @@ var access_token = params.access_token,
       // render initial screen
       $('#login').show();
       $('#loggedin').hide();
-
-    }
-  }
-
-  function hideShowNavElements(hide, name) {
-    if (!$("#nav").size()) {
-      window.requestAnimationFrame(hideShowNavElements);
-    } else {
-      if (hide == "hide") {
-        console.log("hit")
-        $('#login').show();
-        $('#loggedin').hide();
-        $('#log-in-top').show();
-        $('#log-out-top').hide();
-        $('#name').hide();
-      } else if (hide == "show") {
-        console.log("show")
-        $('#login').hide();
-        $('#loggedin').show();
-        $('#log-in-top').hide();
-        $('#log-out-top').show();
-        $('#name').show();
-        document.getElementById("name").innerHTML = name;
-      }
-
-      if(access_token) {
-        document.getElementById('muse-tools-title').href = '/#access_token=' + access_token + '&refresh_token=' + refresh_token;
-      } else {
-        document.getElementById('muse-tools-title').href = '/';
-      }
-
-      document.getElementById('search-nav-link').addEventListener('click', function() {
-        window.location = '/searcher#access_token=' + access_token + '&refresh_token=' + refresh_token;
-      }, false);
 
     }
   }
