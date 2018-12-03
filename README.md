@@ -20,10 +20,13 @@ Search:
 
 Playlist Gen:
 - Incorperate Library Downloads/Likes
+- Actually finish this lol
 
-Group Listed: 
-- 
+Group Listen:
+- Requires a seperate authentication system
+- Database of queues and songs
 
-Profile:
-- Recently Played
-- 
+Potential Future Ideas:
+- mix other music providers in
+- chat features
+
