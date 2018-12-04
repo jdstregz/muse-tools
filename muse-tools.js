@@ -13,7 +13,7 @@ function setAccessToken(code) {
 }
 
 function setOwnerID() {
-    
+
 }
 
 function getRecentlyAddedTracksPlaylist(){
@@ -34,7 +34,7 @@ function getRecentlyAddedTracksPlaylist(){
             current_user_id = parsed.id
             getAllPlaylistIDs()
         });
-        
+
         console.log("Retrieving Playlists...")
     }
 
@@ -66,15 +66,15 @@ function getPlaylists(playlistURL, ids, callback) {
                 recentlyAddedExists = true
                 recentlyAddedID = x.id
             }
-            
+
         }
         if (playlists.next) {
             next = playlists.next
         }
         if (ids.length > 0) {
             playlistIDS = playlistIDS.concat(ids)
-           
-        } 
+
+        }
         return callback( [playlistIDS, next]);
     });
 }
@@ -92,7 +92,7 @@ function returnPlaylists(body) {
         var trackIDS = []
         getAllRecentlyAddedTracks(ids, trackIDS)
     }
-    
+
 }
 
 function getAllPlaylistIDs() {
@@ -137,7 +137,7 @@ function getAllTracksFromPlaylists(trackURL, ids, playlists, callback) {
 }
 
 function getAllRecentlyAddedTracks(playlistIDs, trackIDS) {
-    var id = playlistIDs.pop()
+    var id = playlistIDs.pop();
     var next = `https://api.spotify.com/v1/playlists/${id}/tracks`
     getAllTracksFromPlaylists(next, trackIDS, playlistIDs, checkTracks)
 }
@@ -194,7 +194,7 @@ function updatePlaylistFromTracks(id, tracks) {
     }, function(error, response, body){
         console.log(error)
         console.log(body);
-        
+
     });
 }
 

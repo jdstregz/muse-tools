@@ -225,7 +225,7 @@ app.get('/trackdetail', function(req, res) {
   var trackID = req.query.track_id;
   musetools.setAccessToken(access_token);
 
-})
+});
 
 console.log('Listening on 8888');
 app.listen(process.env.PORT || 8888);
