@@ -196,6 +196,7 @@
       console.log(new Date('2017-01-13T16:44:53Z'));
       // Click Listeners
       document.getElementById('createRecentlyAdded').addEventListener('click', function(event) {
+        document.getElementById("createRecentlyAdded").classList.add('disabled');
         $("#RequestMessage").hide();
         var playlistName = document.getElementById('recentlyAddedPlaylistName').value;
         var excludedPlaylists = document.getElementById('excludedPlaylists').value;
@@ -212,18 +213,22 @@
           }
 
         }).done(function(data) {
-          if (data.error) {
+          if (data.data == "error") {
               document.getElementById("message").innerHTML = "An error occured.";
               $('#RequestMessage').show();
-          } else if (data.success) {
+          } else if (data.data == "success") {
               document.getElementById("message").innerHTML = "Success!! Check your spotify!";
               $('#RequestMessage').show();
           }
           $('#recentlyAddedProgressBar').hide();
+          document.getElementById("createRecentlyAdded").classList.remove('disabled');
+
         }).fail(function(jqXHR, textStatus){
               document.getElementById("message").innerHTML = "The request failed: " + textStatus;
               $('#RequestMessage').show();
               $('#recentlyAddedProgressBar').hide();
+              document.getElementById("createRecentlyAdded").classList.remove('disabled');
+
           });
       }, false);
 
