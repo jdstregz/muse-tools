@@ -15,6 +15,7 @@
     #log-in-top,
     #login,
     #recentlyAddedProgressBar,
+    #RequestMessage,
     #loggedin {
       display: none;
     }
@@ -164,9 +165,17 @@
             </form>
             <button type="button" class="btn btn-success" id="createRecentlyAdded">Create</button>
             <div id="recentlyAddedProgressBar">
+              <p class="mt-3">
+                Loading... If you have many playlists or a large library this will take a minute...
+              </p>
               <div class="progress mt-3" >
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
               </div>
+            </div>
+            <div id="RequestMessage" class="mt-3">
+              <p id="message">
+
+              </p>
             </div>
           </div>
           <div class="modal-footer">
@@ -187,10 +196,11 @@
       console.log(new Date('2017-01-13T16:44:53Z'));
       // Click Listeners
       document.getElementById('createRecentlyAdded').addEventListener('click', function(event) {
+        $("#RequestMessage").hide();
         var playlistName = document.getElementById('recentlyAddedPlaylistName').value;
         var excludedPlaylists = document.getElementById('excludedPlaylists').value;
         var weeksback = document.getElementById('weeksBack').value;
-        console.log("creating recently added")
+        console.log("creating recently added");
         $('#recentlyAddedProgressBar').show();
         $.ajax({
           url: '/recentlyAdded',
@@ -200,10 +210,21 @@
             'excludedPlaylists': excludedPlaylists,
             'weeksback' : weeksback
           }
+
         }).done(function(data) {
-          console.log(data.userID)
+          if (data.error) {
+              document.getElementById("message").innerHTML = "An error occured.";
+              $('#RequestMessage').show();
+          } else if (data.success) {
+              document.getElementById("message").innerHTML = "Success!! Check your spotify!";
+              $('#RequestMessage').show();
+          }
           $('#recentlyAddedProgressBar').hide();
-        });
+        }).fail(function(jqXHR, textStatus){
+              document.getElementById("message").innerHTML = "The request failed: " + textStatus;
+              $('#RequestMessage').show();
+              $('#recentlyAddedProgressBar').hide();
+          });
       }, false);
 
 
