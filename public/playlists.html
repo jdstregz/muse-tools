@@ -224,6 +224,7 @@
           document.getElementById("createRecentlyAdded").classList.remove('disabled');
 
         }).fail(function(jqXHR, textStatus){
+              console.log(jqXHR);
               document.getElementById("message").innerHTML = "The request failed: " + textStatus;
               $('#RequestMessage').show();
               $('#recentlyAddedProgressBar').hide();
