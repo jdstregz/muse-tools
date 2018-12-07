@@ -164,9 +164,9 @@ function createPlaylist(name, trackIDS) {
             url:     `https://api.spotify.com/v1/users/${current_user_id}/playlists`,
             body:    `{"name": "${name}", "description":"description", "public": false}`
         }, function(error, response, body){
-            console.log(error)
+            console.log(error);
             console.log(body);
-            var str = JSON.stringify(body)
+            var str = JSON.stringify(body);
             str = str.toString()
             var playlist = JSON.parse(str);
             recentlyAddedID = playlist.id

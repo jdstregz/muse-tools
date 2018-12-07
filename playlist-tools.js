@@ -12,11 +12,11 @@ function getUserID(access_token, callback) {
     parsedBody = parsedBody.toString();
     parsedBody = JSON.parse(parsedBody);
     current_user_id = parsedBody.id;
+    console.log('UserID retreived: ' + current_user_id);
+
     return callback(current_user_id, error);
   });
 }
-
-// after we get the userID we use it in our getPlaylistFunction
 
 // this gets the playlist ids
 function getPlaylistIDs(access_token, user_id, ignore_playlists, playlistURL, ids, origCallback, callback) {
@@ -30,6 +30,7 @@ function getPlaylistIDs(access_token, user_id, ignore_playlists, playlistURL, id
     };
     // request to get playlists
     request.get(options, function(error, response, body) {
+      try {
       if (error) {
         console.log(error);
       }
@@ -38,12 +39,15 @@ function getPlaylistIDs(access_token, user_id, ignore_playlists, playlistURL, id
         var playlists = JSON.parse(str);
         // loop through playlists
         for (i = 0; i < playlists.items.length; i++) {
+            playlistDict = {};
             x = playlists.items[i];
             console.log(x.name);
+            playlistDict["name"] = x.name;
             // if the name of the playlist doesn't exist in the ignore playlists
             // and the owner of the playlist is the current_user
             if (!ignore_playlists.includes(x.name) && x.owner.id == user_id){
-                playlistIDS.push(x.id);
+                playlistDict["id"] = x.id;
+                playlistIDS.push(playlistDict);
             }
         }
         // if the response has a value next then apply it
@@ -56,34 +60,34 @@ function getPlaylistIDs(access_token, user_id, ignore_playlists, playlistURL, id
         }
         // callback time
         return callback(access_token, next, playlistIDS, user_id, ignore_playlists, error, origCallback);
+      }
+      catch (error) {
+        console.log(error.message);
+        return callback(null, null, null, null, null, "something fucked up", origCallback);
+      }
     });
 }
 
 function getAllPlaylistIDs(access_token, next, ids, user_id, ignore_playlists, error, callback) {
   if (next && !error) {
-    console.log("NEXT WAS THERE");
     getPlaylistIDs(access_token, user_id, ignore_playlists, next, ids, callback, getAllPlaylistIDs);
   } else if (error){
-    console.log("ERROR HERE");
       console.log(error);
+      return callback([]);
     } else {
     // we have gotten all of our playlistIDs and now we need to go through
     if(callback){
-      console.log("CALLBACK RETURNED HERE");
-      console.log(ids.length);
       return callback(ids);
     } else {
-      console.log("NO CALLBACK");
-      console.log(ids.lengh);
+      console.log("An error occured");
     }
   }
 }
 
 
 function getTrackDataFromPlaylist(access_token, playlistID, trackDataArray, origCallback, callback) {
-  console.log("Track Data Length so far: " + trackDataArray.length);
   var next = "";
-  var tracks = []
+  var tracks = [];
   var options = {
     url: playlistID,
     headers: { 'Authorization': 'Bearer ' + access_token},
@@ -91,7 +95,7 @@ function getTrackDataFromPlaylist(access_token, playlistID, trackDataArray, orig
   };
   request.get(options, function(error, response, body) {
     if (error) {
-      console.log("error");
+      console.log("error: " + error);
     }
     var trackData = JSON.stringify(body);
     trackData = trackData.toString();
@@ -101,9 +105,9 @@ function getTrackDataFromPlaylist(access_token, playlistID, trackDataArray, orig
       var id = item.track.id;
       if (id) {
         var dateAdded = item.added_at;
-        var track = [id, dateAdded]
+        var track = [id, dateAdded];
         //console.log(track)
-        tracks.push(track)
+        tracks.push(track);
       }
     }
     trackDataArray.push(tracks);
@@ -113,13 +117,11 @@ function getTrackDataFromPlaylist(access_token, playlistID, trackDataArray, orig
 
 function getAllTrackDataFromPlaylist(access_token, next, trackDataArray, error, callback) {
   if (next && !error) {
-    console.log("TRACK DATA ARRAY" + trackDataArray)
     getTrackDataFromPlaylist(access_token, next, trackDataArray, callback, getAllTrackDataFromPlaylist);
   } else if (error) {
-    console.log("ERROR" + error);
+    console.log("ERROR: " + error);
   } else {
     if(callback) {
-      console.log("CALLBACK RETURNED HERE");
       return callback(trackDataArray);
     }
   }
@@ -128,9 +130,11 @@ function getAllTrackDataFromPlaylist(access_token, next, trackDataArray, error, 
 function getAllTrackDataFromMultiplePlaylists(access_token, playlistIDs, playlistTrackDataArray, callback) {
   if (playlistIDs.length > 0) {
     // then we get all the track data from that playlist
-    id = playlistIDs.pop();
+    dict = playlistIDs.pop();
+    id = dict["id"];
+    name = dict["name"];
     next = `https://api.spotify.com/v1/playlists/${id}/tracks`;
-    console.log("getting track data from" + id);
+    console.log("Getting track data from: " + id + " - " + name);
     getAllTrackDataFromPlaylist(access_token, next, [], null, function(trackDataArray) {
       console.log("PlaylistTrackData Length: " + playlistTrackDataArray.length);
       playlistTrackDataArray = playlistTrackDataArray.concat(trackDataArray);
@@ -146,25 +150,23 @@ function getAllTrackDataFromMultiplePlaylists(access_token, playlistIDs, playlis
 function getTrackIDsViaDateFilter(trackDataArray, days) {
   next = "";
   trackIDs = [];
+  count = 0;
   for (index = 0; index < trackDataArray.length; index++) {
     var trackData = trackDataArray[index];
-    console.log("TrackData: " + trackData);
     for (i = 0; i < trackData.length; i++) {
-      console.log("Track: " + i)
       var track = trackData[i];
-      var id = track[0]
+      var id = track[0];
       var dateAdded = new Date(track[1].toString());
       var targetDate = new Date();
       targetDate.setDate(targetDate.getDate() - days);
       if (dateAdded > targetDate && !trackIDs.includes(id)) {
-        console.log("recently added track found!")
+        console.log("Recently added track found!");
+        count = count + 1;
         trackIDs.push(id);
-      } else {
-        //console.log(dateAdded + " is not more recent than " + targetDate);
       }
     }
   }
-
+  console.log("Total Tracks After Filter: " + count);
   return trackIDs;
 }
 
@@ -176,36 +178,114 @@ function getAllRecentlyAddedTrackIdsFromPlaylists(access_token, ids, days, callb
   });
 }
 
+
+
 //function getAllTrackIDsFromMultiplePlaylists(access_token, )
 
-function checkIfPlaylistExists(access_token, playlistName) {
+function playlistExists(playlistName, playlistDicts) {
+  console.log(playlistDicts);
+    for (i = 0; i < playlistDicts.length; i++) {
+      var dict = playlistDicts[i];
+      var name = dict["name"];
+      console.log(dict["name"])
+      if (playlistName == name) {
+        return dict["id"];
+      }
+    }
+    return null;
 
 }
 
-function createPlaylist(access_token, playlistName) {
+function createPlaylist(access_token, playlistName, user_id, callback) {
+  request.post({
+    headers: { 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
+    url:     `https://api.spotify.com/v1/users/${user_id}/playlists`,
+    body:    `{"name": "${playlistName}", "description":"description", "public": false}`
+  }, function(error, response, body) {
+
+    return callback(body);
+  });
 
 }
 
-function updatePlaylist(access_token, playlistID, trackIDs) {
-
+function updatePlaylist(access_token, playlistID, tracks, callback) {
+  var uri_body = '{"uris": [';
+  var second_set = [];
+  if (tracks.length > 100) {
+    second_set = tracks.slice(101, tracks.length);
+    tracks = tracks.slice(0, 100);
+  }
+  for(i = 0; i < tracks.length; i++) {
+    uri_body = uri_body + `"spotify:track:${tracks[i]}"`;
+    if(i != tracks.length-1){
+      uri_body = uri_body + ",";
+    }
+  }
+  uri_body = uri_body + "]}";
+  var options = {
+        headers: { 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
+        url:     `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+        body:    `${uri_body}`
+  };
+  request.put(options, function(error, response, body){
+    console.log("ERROR IN UPDATE" + error);
+    console.log("UPDATE BODY" + body);
+    if (second_set.length > 0) {
+      // add more songs
+    } else {
+      console.log("CALLBACK");
+      return callback();
+    }
+  });
 }
 
 function createRecentlyAddedPlaylist(access_token, ignore_playlists, playlistName, weeksBack, callback) {
+  try {
+  console.log("Starting recently added creation...");
   getUserID(access_token, function(user_id, error) {
     if (!error) {
       // userID retrieved, we now get playlists
       var ids = [];
       var next = 'https://api.spotify.com/v1/me/playlists?limit=50';
-      getAllPlaylistIDs(access_token, next, ids, user_id, ignore_playlists, false, function(playlistIDs) {
-        getAllTrackDataFromMultiplePlaylists(access_token, playlistIDs, [], function(trackData) {
-          var ids = getTrackIDsViaDateFilter(trackData, 7);
-          console.log(ids)
-          return callback(ids);
+      var ignorePlaylists = ignore_playlists.split(',');
+      console.log("Getting playlists...");
+      getAllPlaylistIDs(access_token, next, ids, user_id, ignorePlaylists, false, function(playlistDicts) {
+        console.log("Playlists found. Getting Tracks... this may take a moment...");
+        if(playlistDicts.length == 0){
+          return callback("failure");
+        }
+        var playlistDictsCopy = JSON.parse(JSON.stringify( playlistDicts ));
+        getAllTrackDataFromMultiplePlaylists(access_token, playlistDicts, [], function(trackData) {
+          console.log("Tracks obtained... Filtering by days back: " + weeksBack);
+          var recentlyAddedIDs = getTrackIDsViaDateFilter(trackData, weeksBack);
+          console.log(recentlyAddedIDs);
+          var id = playlistExists(playlistName, playlistDictsCopy);
+          console.log(id);
+          if (!id) {
+            console.log("Creating playlist: " + playlistName);
+            createPlaylist(access_token, playlistName, user_id, function(body) {
+              var parsed = JSON.parse(body);
+              var returnID = parsed.id;
+              console.log("Return ID" + returnID);
+              updatePlaylist(access_token, returnID, recentlyAddedIDs, function() {
+                return callback("success");
+              });
+            });
+          } else {
+            console.log("Playlist exists, updating tracks...");
+            updatePlaylist(access_token, id, recentlyAddedIDs, function() {
+              return callback("success");
+            });
+          }
         });
       });
-
     }
   });
+}
+catch (err) {
+    console.log(err);
+    return callack("failure");
+  }
 }
 
 

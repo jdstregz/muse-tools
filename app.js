@@ -202,6 +202,9 @@ app.get('/recentlyAdded', function(req, res) {
   var playlistName = req.query.playlistName;
   var excludedPlaylists = req.query.excludedPlaylists;
   var weeksback = req.query.weeksback;
+
+  var days = parseInt(weeksback);
+
   /*
   var userID = playlist_tools.getUserID(access_token, function(user_id, error) {
     if (!error) {
@@ -211,7 +214,8 @@ app.get('/recentlyAdded', function(req, res) {
     }
   });
   */
-  playlist_tools.createRecentlyAddedPlaylist(access_token, [], "test", "test", function(data) {
+
+  playlist_tools.createRecentlyAddedPlaylist(access_token, excludedPlaylists, playlistName, days, function(data) {
     res.send({
       'data': data
     });
