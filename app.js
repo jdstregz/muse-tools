@@ -90,7 +90,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-playback-state streaming user-read-birthdate user-read-email user-read-email playlist-read-private playlist-modify-private playlist-read-collaborative playlist-modify-public';
+  var scope = 'user-read-private user-read-playback-state streaming user-read-birthdate user-read-email user-read-email playlist-read-private playlist-modify-private playlist-read-collaborative playlist-modify-public user-library-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -205,23 +205,24 @@ app.get('/recentlyAdded', function(req, res) {
 
   var days = parseInt(weeksback);
 
-  /*
-  var userID = playlist_tools.getUserID(access_token, function(user_id, error) {
-    if (!error) {
-      res.send({
-        'userID': user_id
-      });
-    }
-  });
-  */
-
   playlist_tools.createRecentlyAddedPlaylist(access_token, excludedPlaylists, playlistName, days, function(data) {
     res.send({
       'data': data
     });
   });
 
+});
 
+app.get('/recentlyAddedLibrary', function (req, res) {
+  var access_token = req.query.access_token;
+  var playlistName = req.query.playlistName;
+  var daysback = req.query.daysback;
+  var days = parseInt(daysback);
+  playlist_tools.createRecentlyAddedLibraryPlaylist(access_token, playlistName, days, function(data) {
+    res.send({
+      'data': data
+    });
+  });
 });
 
 app.get('/trackdetail', function(req, res) {

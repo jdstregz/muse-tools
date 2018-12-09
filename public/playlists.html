@@ -15,7 +15,10 @@
     #log-in-top,
     #login,
     #recentlyAddedProgressBar,
+    #recentlyAddedLibraryProgressBar,
+    #RequestMessageLibrary,
     #RequestMessage,
+    #RequestMessageLibrary,
     #loggedin {
       display: none;
     }
@@ -115,7 +118,7 @@
             <p class="card-text">
               Wanna know what you liked/added to your library within the past whatever days. This is similar to the playlist recently added, but it scans your library!
             </p>
-            <button id="time-machine" class="btn btn-primary">I have a library?</a>
+            <button id="recently-added-library" data-toggle="modal" type="button" data-target="#recentlyAddedLibrary" class="btn btn-primary">I have a library?</a>
           </div>
         </div>
         <div class="card text-white bg-dark mb-3 d-inline-block">
@@ -204,6 +207,53 @@
       </div>
     </div>
 
+    <div class="modal fade bd-example-modal-lg" id="recentlyAddedLibrary" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal3Label">Recently Added Library</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>For some reason, spotify does not have a Recently Added Playlist For Library. Sure, on the desktop app you can sort by added in ur songs, but lets make it a little easier with a nice playlist generator.</p>
+            <div class="alert alert-warning" role="alert">
+              <strong>Warning!</strong> If you specify a playlist name that already exists in your profile, it will be overwritten!
+            </div>
+            <form class="mt-2">
+              <div class="form-group">
+                <label for="PlaylistName"><b>Playlist Name</b></label>
+                <input type="text" class="form-control" id="recentlyAddedPlaylistLibraryName" placeholder="Playlist Name">
+              </div>
+              <div class="form-group">
+                <label for="ExcludePlaylists"><b>How many days back?</b></label>
+                <input type="number" class="form-control" id="daysBackLibrary" name="quantity" min="1" value="1">
+              </div>
+            </form>
+            <button type="button" class="btn btn-success" id="createRecentlyAddedLibrary">Create</button>
+            <div id="recentlyAddedLibraryProgressBar">
+              <p class="mt-3">
+                Loading... If you have a large library this will take a minute...
+              </p>
+              <div class="progress mt-3" >
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+              </div>
+            </div>
+            <div id="RequestMessageLibrary" class="mt-3">
+              <p id="messageLibrary">
+
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Button trigger modal -->
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
@@ -250,6 +300,44 @@
 
           });
       }, false);
+
+      document.getElementById('createRecentlyAddedLibrary').addEventListener('click', function(event) {
+        document.getElementById("createRecentlyAddedLibrary").classList.add('disabled');
+        $("#RequestMessageLibrary").hide();
+        var playlistName = document.getElementById('recentlyAddedPlaylistLibraryName').value;
+        var daysback = document.getElementById('daysBackLibrary').value;
+        console.log("creating recently added");
+        $('#recentlyAddedLibraryProgressBar').show();
+        $.ajax({
+          url: '/recentlyAddedLibrary',
+          data: {
+            'access_token': access_token,
+            'playlistName': playlistName,
+            'daysback' : daysback
+          }
+
+        }).done(function(data) {
+          if (data.data == "error") {
+              document.getElementById("messageLibrary").innerHTML = "An error occured.";
+              $('#RequestMessageLibrary').show();
+          } else if (data.data == "success") {
+              document.getElementById("messageLibrary").innerHTML = "Success!! Check your spotify!";
+              $('#RequestMessageLibrary').show();
+          }
+          $('#recentlyAddedLibraryProgressBar').hide();
+          document.getElementById("createRecentlyAddedLibrary").classList.remove('disabled');
+
+        }).fail(function(jqXHR, textStatus){
+              console.log(jqXHR);
+              document.getElementById("messageLibrary").innerHTML = "The request failed: " + textStatus;
+              $('#RequestMessageLibrary').show();
+              $('#recentlyAddedLibraryProgressBar').hide();
+              document.getElementById("createRecentlyAddedLibrary").classList.remove('disabled');
+
+          });
+      }, false);
+
+
 
 
 
