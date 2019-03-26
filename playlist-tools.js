@@ -1,10 +1,10 @@
-var request = require('request');
+var request = require("request");
 
 // gets the userid of the current access token
 function getUserID(access_token, callback) {
   var options = {
-    url: 'https://api.spotify.com/v1/me',
-    headers: { 'Authorization': 'Bearer ' + access_token },
+    url: "https://api.spotify.com/v1/me",
+    headers: { Authorization: "Bearer " + access_token },
     json: true
   };
   request.get(options, function(error, response, body) {
@@ -12,70 +12,109 @@ function getUserID(access_token, callback) {
     parsedBody = parsedBody.toString();
     parsedBody = JSON.parse(parsedBody);
     current_user_id = parsedBody.id;
-    console.log('UserID retreived: ' + current_user_id);
+    console.log("UserID retreived: " + current_user_id);
 
     return callback(current_user_id, error);
   });
 }
 
 // this gets the playlist ids
-function getPlaylistIDs(access_token, user_id, ignore_playlists, playlistURL, ids, origCallback, callback) {
+function getPlaylistIDs(
+  access_token,
+  user_id,
+  ignore_playlists,
+  playlistURL,
+  ids,
+  origCallback,
+  callback
+) {
   // variables
-    var playlistIDS = [];
-    var next = "";
-    var options = {
-        url: playlistURL,
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-    };
-    // request to get playlists
-    request.get(options, function(error, response, body) {
-      try {
+  var playlistIDS = [];
+  var next = "";
+  var options = {
+    url: playlistURL,
+    headers: { Authorization: "Bearer " + access_token },
+    json: true
+  };
+  // request to get playlists
+  request.get(options, function(error, response, body) {
+    try {
       if (error) {
         console.log(error);
       }
-        var str = JSON.stringify(body);
-        str = str.toString();
-        var playlists = JSON.parse(str);
-        // loop through playlists
-        for (i = 0; i < playlists.items.length; i++) {
-            playlistDict = {};
-            x = playlists.items[i];
-            //console.log(x.name);
-            playlistDict["name"] = x.name;
-            // if the name of the playlist doesn't exist in the ignore playlists
-            // and the owner of the playlist is the current_user
-            if (!ignore_playlists.includes(x.name) && x.owner.id == user_id){
-                playlistDict["id"] = x.id;
-                playlistIDS.push(playlistDict);
-            }
+      var str = JSON.stringify(body);
+      str = str.toString();
+      var playlists = JSON.parse(str);
+      // loop through playlists
+      for (i = 0; i < playlists.items.length; i++) {
+        playlistDict = {};
+        x = playlists.items[i];
+        //console.log(x.name);
+        playlistDict.name = x.name;
+        // if the name of the playlist doesn't exist in the ignore playlists
+        // and the owner of the playlist is the current_user
+        if (!ignore_playlists.includes(x.name) && x.owner.id == user_id) {
+          playlistDict.id = x.id;
+          playlistIDS.push(playlistDict);
         }
-        // if the response has a value next then apply it
-        if (playlists.next) {
-            next = playlists.next;
-        }
-        // if ids is populated then we concat
-        if (ids.length > 0) {
-            playlistIDS = playlistIDS.concat(ids);
-        }
-        // callback time
-        return callback(access_token, next, playlistIDS, user_id, ignore_playlists, error, origCallback);
       }
-      catch (error) {
-        console.log(error.message);
-        return callback(null, null, null, null, null, "something fucked up", origCallback);
+      // if the response has a value next then apply it
+      if (playlists.next) {
+        next = playlists.next;
       }
-    });
+      // if ids is populated then we concat
+      if (ids.length > 0) {
+        playlistIDS = playlistIDS.concat(ids);
+      }
+      // callback time
+      return callback(
+        access_token,
+        next,
+        playlistIDS,
+        user_id,
+        ignore_playlists,
+        error,
+        origCallback
+      );
+    } catch (err) {
+      console.log(err.message);
+      return callback(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "something fucked up",
+        origCallback
+      );
+    }
+  });
 }
 
-function getAllPlaylistIDs(access_token, next, ids, user_id, ignore_playlists, error, callback) {
+function getAllPlaylistIDs(
+  access_token,
+  next,
+  ids,
+  user_id,
+  ignore_playlists,
+  error,
+  callback
+) {
   if (next && !error) {
-    getPlaylistIDs(access_token, user_id, ignore_playlists, next, ids, callback, getAllPlaylistIDs);
-  } else if (error){
-      return callback([], error);
-    } else {
+    getPlaylistIDs(
+      access_token,
+      user_id,
+      ignore_playlists,
+      next,
+      ids,
+      callback,
+      getAllPlaylistIDs
+    );
+  } else if (error) {
+    return callback([], error);
+  } else {
     // we have gotten all of our playlistIDs and now we need to go through
-    if(callback){
+    if (callback) {
       return callback(ids, null);
     } else {
       console.log("An error occured");
@@ -83,78 +122,120 @@ function getAllPlaylistIDs(access_token, next, ids, user_id, ignore_playlists, e
   }
 }
 
-
-function getTrackDataFromPlaylist(access_token, playlistID, trackDataArray, origCallback, callback) {
+function getTrackDataFromPlaylist(
+  access_token,
+  playlistID,
+  trackDataArray,
+  origCallback,
+  callback
+) {
   var next = "";
   var tracks = [];
   var options = {
     url: playlistID,
-    headers: { 'Authorization': 'Bearer ' + access_token},
+    headers: { Authorization: "Bearer " + access_token },
     json: true
   };
   request.get(options, function(error, response, body) {
     try {
-    if (error) {
-      console.log("error: " + error);
-    }
-    var trackData = JSON.stringify(body);
-    trackData = trackData.toString();
-    trackData = JSON.parse(trackData);
-    for (i = 0; i < trackData.items.length; i++) {
-      var item = trackData.items[i];
-      var trackID = item.track.id;
-      if (trackID) {
-        var date_added = item.added_at;
-        var track = {
-          id : trackID,
-          date_added: date_added
-        };
-        //console.log(track)
-        tracks.push(track);
+      if (error) {
+        console.log("error: " + error);
       }
-    }
-    trackDataArray.push(tracks);
-    return callback(access_token, trackData.next, trackDataArray, error, origCallback);
-    }
-    catch (error) {
-      console.log(error.message);
-      return callback(null, null, null, null, null, "something fucked up in track", origCallback);
+      var trackData = JSON.stringify(body);
+      trackData = trackData.toString();
+      trackData = JSON.parse(trackData);
+      for (i = 0; i < trackData.items.length; i++) {
+        var item = trackData.items[i];
+        var trackID = item.track.id;
+        if (trackID) {
+          var date_added = item.added_at;
+          var track = {
+            id: trackID,
+            date_added: date_added
+          };
+          //console.log(track)
+          tracks.push(track);
+        }
+      }
+      trackDataArray.push(tracks);
+      return callback(
+        access_token,
+        trackData.next,
+        trackDataArray,
+        error,
+        origCallback
+      );
+    } catch (err) {
+      console.log(err.message);
+      return callback(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "something fucked up in track",
+        origCallback
+      );
     }
   });
 }
 
-function getAllTrackDataFromPlaylist(access_token, next, trackDataArray, error, callback) {
+function getAllTrackDataFromPlaylist(
+  access_token,
+  next,
+  trackDataArray,
+  error,
+  callback
+) {
   if (next && !error) {
-    getTrackDataFromPlaylist(access_token, next, trackDataArray, callback, getAllTrackDataFromPlaylist);
+    getTrackDataFromPlaylist(
+      access_token,
+      next,
+      trackDataArray,
+      callback,
+      getAllTrackDataFromPlaylist
+    );
   } else if (error) {
     console.log("ERROR: " + error);
     return callback([], error);
   } else {
-    if(callback) {
+    if (callback) {
       return callback(trackDataArray, null);
     }
   }
 }
 
-function getAllTrackDataFromMultiplePlaylists(access_token, playlistIDs, playlistTrackDataArray, callback) {
+function getAllTrackDataFromMultiplePlaylists(
+  access_token,
+  playlistIDs,
+  playlistTrackDataArray,
+  callback
+) {
   if (playlistIDs.length > 0) {
     // then we get all the track data from that playlist
     dict = playlistIDs.pop();
-    id = dict["id"];
-    name = dict["name"];
+    id = dict.id;
+    name = dict.name;
     next = `https://api.spotify.com/v1/playlists/${id}/tracks`;
-    getAllTrackDataFromPlaylist(access_token, next, [], null, function(trackDataArray, error) {
+    getAllTrackDataFromPlaylist(access_token, next, [], null, function(
+      trackDataArray,
+      error
+    ) {
       if (error) {
         return callback(null, error);
       }
       //console.log("PlaylistTrackData Length: " + playlistTrackDataArray.length);
       playlistTrackDataArray = playlistTrackDataArray.concat(trackDataArray);
-      getAllTrackDataFromMultiplePlaylists(access_token, playlistIDs, playlistTrackDataArray, callback);
+      getAllTrackDataFromMultiplePlaylists(
+        access_token,
+        playlistIDs,
+        playlistTrackDataArray,
+        callback
+      );
     });
-  }
-    else {
-      //console.log(playlistTrackDataArray);
-      return callback(playlistTrackDataArray);
+  } else {
+    //console.log(playlistTrackDataArray);
+    return callback(playlistTrackDataArray);
   }
 }
 
@@ -200,42 +281,49 @@ function getTrackIDsViaDateFilterLibrary(trackArray, days) {
   return trackIDs;
 }
 
-function getAllRecentlyAddedTrackIdsFromPlaylists(access_token, ids, days, callback) {
-
-  getAllTrackDataFromMultiplePlaylists(access_token, ids, [], function(trackData) {
+function getAllRecentlyAddedTrackIdsFromPlaylists(
+  access_token,
+  ids,
+  days,
+  callback
+) {
+  getAllTrackDataFromMultiplePlaylists(access_token, ids, [], function(
+    trackData
+  ) {
     var ids = getTrackIDsViaDateFilter(trackData, days);
     return callback(ids);
   });
 }
 
-
-
 //function getAllTrackIDsFromMultiplePlaylists(access_token, )
 
 function playlistExists(playlistName, playlistDicts) {
   //console.log(playlistDicts);
-    for (i = 0; i < playlistDicts.length; i++) {
-      var dict = playlistDicts[i];
-      var name = dict.name;
-      //console.log(dict["name"])
-      if (playlistName == name) {
-        return dict.id;
-      }
+  for (i = 0; i < playlistDicts.length; i++) {
+    var dict = playlistDicts[i];
+    var name = dict.name;
+    //console.log(dict["name"])
+    if (playlistName == name) {
+      return dict.id;
     }
-    return null;
-
+  }
+  return null;
 }
 
 function createPlaylist(access_token, playlistName, user_id, callback) {
-  request.post({
-    headers: { 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
-    url:     `https://api.spotify.com/v1/users/${user_id}/playlists`,
-    body:    `{"name": "${playlistName}", "description":"description", "public": false}`
-  }, function(error, response, body) {
-
-    return callback(body);
-  });
-
+  request.post(
+    {
+      headers: {
+        Authorization: "Bearer " + access_token,
+        "Content-Type": "application/json"
+      },
+      url: `https://api.spotify.com/v1/users/${user_id}/playlists`,
+      body: `{"name": "${playlistName}", "description":"description", "public": false}`
+    },
+    function(error, response, body) {
+      return callback(body);
+    }
+  );
 }
 
 function addSongsToPlaylist(access_token, playlistID, tracks, callback) {
@@ -245,19 +333,22 @@ function addSongsToPlaylist(access_token, playlistID, tracks, callback) {
     second_set = tracks.slice(101, tracks.length);
     tracks = tracks.slice(0, 100);
   }
-  for(i = 0; i < tracks.length; i++) {
+  for (i = 0; i < tracks.length; i++) {
     uri_body = uri_body + `"spotify:track:${tracks[i]}"`;
-    if(i != tracks.length-1){
+    if (i != tracks.length - 1) {
       uri_body = uri_body + ",";
     }
   }
   uri_body = uri_body + "]}";
   var options = {
-        headers: { 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
-        url:     `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
-        body:    uri_body
+    headers: {
+      Authorization: "Bearer " + access_token,
+      "Content-Type": "application/json"
+    },
+    url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+    body: uri_body
   };
-  request.post(options, function(error, response, body){
+  request.post(options, function(error, response, body) {
     console.log("ERROR IN UPDATE" + error);
     console.log("UPDATE BODY" + body);
     if (second_set.length > 0) {
@@ -266,7 +357,7 @@ function addSongsToPlaylist(access_token, playlistID, tracks, callback) {
       return callback();
     }
   });
-  }
+}
 
 function updatePlaylist(access_token, playlistID, tracks, callback) {
   var uri_body = '{"uris": [';
@@ -275,19 +366,22 @@ function updatePlaylist(access_token, playlistID, tracks, callback) {
     second_set = tracks.slice(101, tracks.length);
     tracks = tracks.slice(0, 100);
   }
-  for(i = 0; i < tracks.length; i++) {
+  for (i = 0; i < tracks.length; i++) {
     uri_body = uri_body + `"spotify:track:${tracks[i]}"`;
-    if(i != tracks.length-1){
+    if (i != tracks.length - 1) {
       uri_body = uri_body + ",";
     }
   }
   uri_body = uri_body + "]}";
   var options = {
-        headers: { 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
-        url:     `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
-        body:    uri_body
+    headers: {
+      Authorization: "Bearer " + access_token,
+      "Content-Type": "application/json"
+    },
+    url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+    body: uri_body
   };
-  request.put(options, function(error, response, body){
+  request.put(options, function(error, response, body) {
     console.log("ERROR IN UPDATE" + error);
     console.log("UPDATE BODY" + body);
     if (second_set.length > 0) {
@@ -305,152 +399,238 @@ function updatePlaylist(access_token, playlistID, tracks, callback) {
 function getSavedTracksFromLibrary(access_token, next_url, callback) {
   var trackArray = [];
   var options = {
-    headers: { 'Authorization': 'Bearer ' + access_token},
+    headers: { Authorization: "Bearer " + access_token },
     url: next_url
   };
   request.get(options, function(error, response, body) {
     try {
       if (error) {
         console.log("Error occured getting saved library tracks: " + error);
-        return callback (null, null, error);
+        return callback(null, null, error);
       }
       var trackData = JSON.parse(body);
       for (i = 0; i < trackData.items.length; i++) {
         var track = trackData.items[i];
         var trackDict = {
-          id : track.track.id,
-          date_added : track.added_at
+          id: track.track.id,
+          date_added: track.added_at
         };
         trackArray.push(trackDict);
       }
       return callback(trackArray, trackData.next, null);
-    }
-    catch (err) {
-      console.log("An error occured within the request for library tracks " + err.message);
+    } catch (err) {
+      console.log(
+        "An error occured within the request for library tracks " + err.message
+      );
       return callback(null, null, err);
     }
   });
 }
 
 // callback returns trackArray and error
-function getAllSavedTracksFromLibrary(access_token, masterTrackArray, next, error, callback) {
-  if (next && !error){
-    getSavedTracksFromLibrary(access_token, next, function(trackArray, next, error) {
+function getAllSavedTracksFromLibrary(
+  access_token,
+  masterTrackArray,
+  next,
+  error,
+  callback
+) {
+  if (next && !error) {
+    getSavedTracksFromLibrary(access_token, next, function(
+      trackArray,
+      next,
+      error
+    ) {
       if (trackArray) {
         masterTrackArray = masterTrackArray.concat(trackArray);
       }
-      getAllSavedTracksFromLibrary(access_token, masterTrackArray, next, error, callback);
+      getAllSavedTracksFromLibrary(
+        access_token,
+        masterTrackArray,
+        next,
+        error,
+        callback
+      );
     });
   } else if (error) {
     return callback(null, error);
   } else {
     return callback(masterTrackArray, null);
   }
- }
+}
 
-
-
-function createRecentlyAddedLibraryPlaylist(access_token, playlistName,  daysBack, callback) {
+function createRecentlyAddedLibraryPlaylist(
+  access_token,
+  playlistName,
+  daysBack,
+  callback
+) {
   try {
     console.log("Starting recently added library creation...");
     var next = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50";
-    getAllSavedTracksFromLibrary(access_token, [], next, null, function(trackArray, error) {
+    getAllSavedTracksFromLibrary(access_token, [], next, null, function(
+      trackArray,
+      error
+    ) {
       console.log(trackArray.length);
       if (!error) {
-        var recentlyAddedIDs = getTrackIDsViaDateFilterLibrary(trackArray, daysBack);
+        var recentlyAddedIDs = getTrackIDsViaDateFilterLibrary(
+          trackArray,
+          daysBack
+        );
         getUserID(access_token, function(user_id, error) {
           if (!error) {
-            next = 'https://api.spotify.com/v1/me/playlists?limit=50';
-            getAllPlaylistIDs(access_token, next, [], user_id, [], null, function (playlistDicts, error) {
-              if (!error) {
-                var id = playlistExists(playlistName, playlistDicts);
-                if (!id) {
-                  console.log("Creating playlist: " + playlistName);
-                  createPlaylist(access_token, playlistName, user_id, function(body) {
-                    var parsed = JSON.parse(body);
-                    var returnID = parsed.id;
-                    console.log("Return ID" + returnID);
-                    updatePlaylist(access_token, returnID, recentlyAddedIDs, function() {
-                      return callback("success");
-                    });
-                  });
-                } else {
-                  console.log("Playlist exists, updating tracks...");
-                  updatePlaylist(access_token, id, recentlyAddedIDs, function() {
-                    return callback("success");
-                  });
+            next = "https://api.spotify.com/v1/me/playlists?limit=50";
+            getAllPlaylistIDs(
+              access_token,
+              next,
+              [],
+              user_id,
+              [],
+              null,
+              function(playlistDicts, error) {
+                if (!error) {
+                  var id = playlistExists(playlistName, playlistDicts);
+                  if (!id) {
+                    console.log("Creating playlist: " + playlistName);
+                    createPlaylist(
+                      access_token,
+                      playlistName,
+                      user_id,
+                      function(body) {
+                        var parsed = JSON.parse(body);
+                        var returnID = parsed.id;
+                        console.log("Return ID" + returnID);
+                        updatePlaylist(
+                          access_token,
+                          returnID,
+                          recentlyAddedIDs,
+                          function() {
+                            return callback("success");
+                          }
+                        );
+                      }
+                    );
+                  } else {
+                    console.log("Playlist exists, updating tracks...");
+                    updatePlaylist(
+                      access_token,
+                      id,
+                      recentlyAddedIDs,
+                      function() {
+                        return callback("success");
+                      }
+                    );
+                  }
                 }
               }
-            });
+            );
           }
         });
       }
     });
-  }
-  catch(error) {
-    console.log("An error occured when trying to create recently added library playlist: " + error);
+  } catch (error) {
+    console.log(
+      "An error occured when trying to create recently added library playlist: " +
+        error
+    );
     return callback("error");
-
   }
 }
 
-function createRecentlyAddedPlaylist(access_token, ignore_playlists, playlistName, weeksBack, callback) {
+function createRecentlyAddedPlaylist(
+  access_token,
+  ignore_playlists,
+  playlistName,
+  weeksBack,
+  callback
+) {
   try {
-  console.log("Starting recently added creation...");
-  getUserID(access_token, function(user_id, error) {
-    if (!error) {
-      // userID retrieved, we now get playlists
-      var ids = [];
-      var next = 'https://api.spotify.com/v1/me/playlists?limit=50';
-      var ignorePlaylists = ignore_playlists.split(',');
-      console.log("Getting playlists...");
-      getAllPlaylistIDs(access_token, next, ids, user_id, ignorePlaylists, false, function(playlistDicts, error) {
-        console.log("Playlists found. Getting Tracks... this may take a moment...");
-        if(error){
-          return callback("error");
-        }
-        var playlistDictsCopy = JSON.parse(JSON.stringify( playlistDicts ));
-        var id = playlistExists(playlistName, playlistDictsCopy);
-        if (id) {
-          index = 0;
-          for (i = 0; i < playlistDicts.length; i++) {
-            if (playlistDicts[i]["id"] == id) {
-              playlistDicts.splice(i, 1);
-              break;
+    console.log("Starting recently added creation...");
+    getUserID(access_token, function(user_id, error) {
+      if (!error) {
+        // userID retrieved, we now get playlists
+        var ids = [];
+        var next = "https://api.spotify.com/v1/me/playlists?limit=50";
+        var ignorePlaylists = ignore_playlists.split(",");
+        console.log("Getting playlists...");
+        getAllPlaylistIDs(
+          access_token,
+          next,
+          ids,
+          user_id,
+          ignorePlaylists,
+          false,
+          function(playlistDicts, error) {
+            console.log(
+              "Playlists found. Getting Tracks... this may take a moment..."
+            );
+            if (error) {
+              return callback("error");
             }
+            var playlistDictsCopy = JSON.parse(JSON.stringify(playlistDicts));
+            var id = playlistExists(playlistName, playlistDictsCopy);
+            if (id) {
+              index = 0;
+              for (i = 0; i < playlistDicts.length; i++) {
+                if (playlistDicts[i].id == id) {
+                  playlistDicts.splice(i, 1);
+                  break;
+                }
+              }
+            }
+            getAllTrackDataFromMultiplePlaylists(
+              access_token,
+              playlistDicts,
+              [],
+              function(trackData, error) {
+                console.log(
+                  "Tracks obtained... Filtering by days back: " + weeksBack
+                );
+                var recentlyAddedIDs = getTrackIDsViaDateFilter(
+                  trackData,
+                  weeksBack
+                );
+                console.log(recentlyAddedIDs);
+                if (!id) {
+                  console.log("Creating playlist: " + playlistName);
+                  createPlaylist(access_token, playlistName, user_id, function(
+                    body
+                  ) {
+                    var parsed = JSON.parse(body);
+                    var returnID = parsed.id;
+                    console.log("Return ID" + returnID);
+                    updatePlaylist(
+                      access_token,
+                      returnID,
+                      recentlyAddedIDs,
+                      function() {
+                        return callback("success");
+                      }
+                    );
+                  });
+                } else {
+                  console.log("Playlist exists, updating tracks...");
+                  updatePlaylist(
+                    access_token,
+                    id,
+                    recentlyAddedIDs,
+                    function() {
+                      return callback("success");
+                    }
+                  );
+                }
+              }
+            );
           }
-        }
-        getAllTrackDataFromMultiplePlaylists(access_token, playlistDicts, [], function(trackData, error) {
-          console.log("Tracks obtained... Filtering by days back: " + weeksBack);
-          var recentlyAddedIDs = getTrackIDsViaDateFilter(trackData, weeksBack);
-          console.log(recentlyAddedIDs);
-          if (!id) {
-            console.log("Creating playlist: " + playlistName);
-            createPlaylist(access_token, playlistName, user_id, function(body) {
-              var parsed = JSON.parse(body);
-              var returnID = parsed.id;
-              console.log("Return ID" + returnID);
-              updatePlaylist(access_token, returnID, recentlyAddedIDs, function() {
-                return callback("success");
-              });
-            });
-          } else {
-            console.log("Playlist exists, updating tracks...");
-            updatePlaylist(access_token, id, recentlyAddedIDs, function() {
-              return callback("success");
-            });
-          }
-        });
-      });
-    }
-  });
-}
-catch (err) {
+        );
+      }
+    });
+  } catch (err) {
     console.log(err);
     return callack("failure");
   }
 }
-
 
 // exports
 exports.getUserID = getUserID;

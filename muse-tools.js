@@ -1,15 +1,15 @@
 var request = require('request'); // "Request" library
 
-var access_token = ""
-var current_user_id = ""
-var ignore_playlists = ['Discover Weekly', 'Release Radar', 'Discover Weekly Archive', 'DJ Stregz Weekly']
+var access_token = "";
+var current_user_id = "";
+var ignore_playlists = ['Discover Weekly', 'Release Radar', 'Discover Weekly Archive', 'DJ Stregz Weekly'];
 var lock = false;
 var recentlyAddedExists = false;
-var recentlyAddedName = "DJ Stregz Weekly"
-var recentlyAddedID = ""
+var recentlyAddedName = "DJ Stregz Weekly";
+var recentlyAddedID = "";
 
 function setAccessToken(code) {
-    access_token = code
+    access_token = code;
 }
 
 function setOwnerID() {
@@ -18,7 +18,7 @@ function setOwnerID() {
 
 function getRecentlyAddedTracksPlaylist(){
     if (!lock) {
-        lock = true
+        lock = true;
         var options = {
             url: 'https://api.spotify.com/v1/me',
             headers: { 'Authorization': 'Bearer ' + access_token },
@@ -28,38 +28,38 @@ function getRecentlyAddedTracksPlaylist(){
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
             console.log(body);
-            var parsedBody = JSON.stringify(body)
-            parsedBody = parsedBody.toString()
-            var parsed = JSON.parse(parsedBody)
-            current_user_id = parsed.id
-            getAllPlaylistIDs()
+            var parsedBody = JSON.stringify(body);
+            parsedBody = parsedBody.toString();
+            var parsed = JSON.parse(parsedBody);
+            current_user_id = parsed.id;
+            getAllPlaylistIDs();
         });
 
-        console.log("Retrieving Playlists...")
+        console.log("Retrieving Playlists...");
     }
 
 
 }
 
 function getPlaylists(playlistURL, ids, callback) {
-    var playlistIDS = []
-    var next = ""
+    var playlistIDS = [];
+    var next = "";
     var options = {
         url: playlistURL,
         headers: { 'Authorization': 'Bearer ' + access_token },
         json: true
     };
     request.get(options, function(error, response, body) {
-        var str = JSON.stringify(body)
-        str = str.toString()
+        var str = JSON.stringify(body);
+        str = str.toString();
         var playlists = JSON.parse(str);
         for (i = 0; i < playlists.items.length; i++) {
-            x = playlists.items[i]
-            console.log(x.name)
-            console.log(x.owner.id)
-            console.log(current_user_id)
+            x = playlists.items[i];
+            console.log(x.name);
+            console.log(x.owner.id);
+            console.log(current_user_id);
             if (!ignore_playlists.includes(x.name) && x.owner.id == current_user_id){
-                playlistIDS.push(x.id)
+                playlistIDS.push(x.id);
             }
             if (x.name == recentlyAddedName) {
                 console.log("Recently Added Playlist Exists :)")
@@ -127,24 +127,24 @@ function getAllTracksFromPlaylists(trackURL, ids, playlists, callback) {
             }
         }
         if (tracks.next) {
-            next = tracks.next
+            next = tracks.next;
         }
         if (ids.length > 0) {
-            trackIDS = trackIDS.concat(ids)
+            trackIDS = trackIDS.concat(ids);
         }
-        return callback([trackIDS, playlists, next])
+        return callback([trackIDS, playlists, next]);
     });
 }
 
 function getAllRecentlyAddedTracks(playlistIDs, trackIDS) {
     var id = playlistIDs.pop();
-    var next = `https://api.spotify.com/v1/playlists/${id}/tracks`
+    var next = `https://api.spotify.com/v1/playlists/${id}/tracks`;
     getAllTracksFromPlaylists(next, trackIDS, playlistIDs, checkTracks)
 }
 
 function checkTracks(body) {
     var trackIDS = body[0]
-    var playlistIDS = body[1]
+    var playlistIDS = body[1];
     var next = body[2]
 
     if (next) {
