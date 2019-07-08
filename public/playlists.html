@@ -74,7 +74,7 @@
             <p class="card-text">
               Write out a sentence and hit go. You'll get a playlist that writes out your sentence word for word. Great for a good laugh or a cryptic message!
             </p>
-            <button id="sentence-playlist" class="btn btn-primary">Sentences Rule!</a>
+            <button id="sentence-playlist" class="btn btn-primary" data-toggle="modal" data-target="#sentencePlaylistModal">Sentences Rule!</a>
           </div>
         </div>
         <div class="card text-white bg-dark mb-3 d-inline-block">
@@ -516,6 +516,8 @@
     </div>
 
     <div id="combinePlaylistsSection">
+    </div>
+    <div id="sentencePlaylist">
 
     </div>
 
@@ -612,15 +614,11 @@
           });
       }, false);
 
-
-
-
-
-
-
     })();
   </script>
+  <script src="./js/playlistHelper.js"></script>
   <script src="./js/combine-playlists.js"></script>
+  <script src="./js/sentencePlaylist.js"></script>
 </body>
 
 </html>

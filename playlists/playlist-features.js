@@ -40,6 +40,7 @@ const combinePlaylists = async (
     playlistObjects,
     access_token
   );
+  console.log(tracks.length);
 
   console.log("Creating new playlist if doesn't exist");
   // check to see if playlist exists, if it doesnt then create it
